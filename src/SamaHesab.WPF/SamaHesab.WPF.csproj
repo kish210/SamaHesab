@@ -6,6 +6,7 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <RootNamespace>SamaHesab.WPF</RootNamespace>
+    <AssemblyName>SamaHesab</AssemblyName>
     <ApplicationManifest>app.manifest</ApplicationManifest>
     <StartupObject>SamaHesab.WPF.App</StartupObject>
     <AssemblyTitle>سما حساب</AssemblyTitle>

@@ -9,27 +9,20 @@
            Compressed="yes">
 
     <MajorUpgrade DowngradeErrorMessage="نسخه جدیدتری از سما حساب نصب شده است." />
-
     <MediaTemplate EmbedCab="yes" />
 
-    <!-- Install directory: Program Files\SamaHesab -->
+    <!-- Program Files\SamaHesab -->
     <StandardDirectory Id="ProgramFiles6432Folder">
       <Directory Id="INSTALLFOLDER" Name="SamaHesab" />
     </StandardDirectory>
 
-    <!-- Start Menu shortcut folder -->
     <StandardDirectory Id="ProgramMenuFolder">
       <Directory Id="AppShortcutFolder" Name="سما حساب" />
     </StandardDirectory>
 
-    <!-- Main application files -->
+    <!-- Harvest the ENTIRE self-contained publish folder (all files beside the app) -->
     <ComponentGroup Id="AppFiles" Directory="INSTALLFOLDER">
-      <Component Id="MainExe" Guid="C1A2B3C4-D5E6-4F70-8192-A3B4C5D6E7F8">
-        <File Id="SamaHesabExe"
-              Source="..\build\SamaHesab.exe"
-              Name="SamaHesab.exe"
-              KeyPath="yes" />
-      </Component>
+      <Files Include="..\build\SamaHesab\**" />
     </ComponentGroup>
 
     <!-- Start Menu shortcut -->
