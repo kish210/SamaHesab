@@ -149,13 +149,13 @@
                     </Button>
                     <!-- Notifications -->
                     <Button Style="{StaticResource QatButton}" Command="{Binding ShowNotificationsCommand}" ToolTip="اعلان‌ها">
-                        <materialDesign:Badged Badge="{Binding NotificationCount}" BadgeColorZoneMode="Accent">
+                        <materialDesign:Badged Badge="{Binding NotificationCount}" BadgeColorZoneMode="SecondaryMid">
                             <materialDesign:PackIcon Kind="BellOutline" Width="20" Height="20"/>
                         </materialDesign:Badged>
                     </Button>
                     <!-- Messages -->
                     <Button Style="{StaticResource QatButton}" Command="{Binding ShowMessagesCommand}" ToolTip="پیام‌ها">
-                        <materialDesign:Badged Badge="{Binding MessageCount}" BadgeColorZoneMode="Accent">
+                        <materialDesign:Badged Badge="{Binding MessageCount}" BadgeColorZoneMode="SecondaryMid">
                             <materialDesign:PackIcon Kind="EmailOutline" Width="20" Height="20"/>
                         </materialDesign:Badged>
                     </Button>
