@@ -1,0 +1,65 @@
+# Git
+.git
+.gitignore
+.gitattributes
+
+# Build artifacts
+bin/
+obj/
+*.dll
+*.exe
+*.pdb
+
+# IDE
+.vs/
+.vscode/
+*.user
+*.sln.docstates
+.idea/
+
+# Runtime
+Debug/
+Release/
+publish/
+
+# Node
+node_modules/
+dist/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Docker
+docker-compose.override.yml
+Dockerfile.dev
+
+# CI/CD
+.github/
+azure-pipelines.yml
+
+# Logs
+*.log
+logs/
+
+# Temp
+tmp/
+temp/
+Temp/
+
+# Test Results
+TestResults/
+coverage/
+
+# Packages
+packages/
+NuGet.Config
+
+# Environment
+.env
+.env.local
+
+# Backup
+*.bak
+*.backup
+*.orig

@@ -1,0 +1,39 @@
+version: '3.8'
+
+services:
+  # SQL Server Database Container
+  mssql-server:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: samahesab-db
+    image: samahesab-db:latest
+    environment:
+      ACCEPT_EULA: "Y"
+      SA_PASSWORD: "SamaHesab@2024"
+      MSSQL_PID: "Developer"
+    ports:
+      - "1433:1433"
+    volumes:
+      # Persist database files
+      - mssql-data:/var/opt/mssql/data
+      - mssql-logs:/var/opt/mssql/backup
+    networks:
+      - samahesab-network
+    healthcheck:
+      test: ["CMD", "/opt/mssql-tools/bin/sqlcmd", "-S", "localhost", "-U", "sa", "-P", "SamaHesab@2024", "-Q", "SELECT 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+    restart: unless-stopped
+
+volumes:
+  mssql-data:
+    driver: local
+  mssql-logs:
+    driver: local
+
+networks:
+  samahesab-network:
+    driver: bridge
