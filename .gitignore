@@ -100,6 +100,10 @@ temp/
 TestResults/
 *.trx
 
-# Build output (too large for git; use Releases)
+# Build output (self-contained 163MB build is too large for git; use Releases)
 build/standalone/
-build/*.exe
+build/app/
+# Keep the distributable artifacts:
+!build/SamaHesab.exe
+!build/SamaHesab_Setup.msi
+build/*.wixpdb

@@ -1,98 +1,46 @@
-# 📦 Build Folder - Release Executables
+# 📦 Sama Hesab — Build Artifacts
 
-## محتویات
+This folder contains ready-to-run distributables of **سما حساب (Sama Hesab)**.
+
+| File | Size | Description |
+|------|------|-------------|
+| `SamaHesab_Setup.msi` | ~7.7 MB | **Installer** — double-click to install. Creates Start Menu + Desktop shortcuts and an uninstall entry. |
+| `SamaHesab.exe` | ~29 MB | **Portable app** — single-file, run directly without installing. |
+
+## Requirements
+
+Both builds are **framework-dependent**, so the target machine needs the
+**.NET 9 Desktop Runtime (x64)**:
+
+- Download: https://dotnet.microsoft.com/download/dotnet/9.0 → *.NET Desktop Runtime 9.x*
+
+> A fully self-contained build (no runtime needed, ~163 MB) can be produced with
+> `dotnet publish -c Release -r win-x64 --self-contained true -p:PublishSingleFile=true`.
+> It is too large for the git repo — publish it to GitHub **Releases** instead.
+
+## Two editions
+
+| Edition | Connection string (`appsettings.json`) |
+|---------|----------------------------------------|
+| **Standalone** (single PC, SQL Express) | `Server=.\SQLEXPRESS;Database=SamaHesab;Trusted_Connection=True;TrustServerCertificate=True;` |
+| **Networked** (shared SQL Server) | `Server=SERVER_NAME;Database=SamaHesab;User Id=sa;Password=***;TrustServerCertificate=True;` |
+
+The database is created from the scripts in `/database` (or via `docker-compose up -d`).
+
+## Default login
 
 ```
-build/
-├── SamaHesab.exe           ← Standalone executable
-├── SamaHesab-Setup.exe     ← Installer (آئندہ)
-├── BUILD_INSTRUCTIONS.md   ← تفصیلی راہنمائی
-├── BUILD.ps1               ← خودکار build script
-└── README.md               ← یہ فائل
+Username: admin
+Password: admin123
 ```
 
----
-
-## 🚀 فوری شروعات
-
-### آپ کے مشین پر:
+## Rebuilding
 
 ```powershell
-cd D:\duc\sama-hesab
+# Portable single-file exe
+dotnet publish src/SamaHesab.WPF -c Release -r win-x64 --self-contained false -p:PublishSingleFile=true -o build/app
+Copy-Item build/app/SamaHesab.WPF.exe build/SamaHesab.exe -Force
 
-# Build script چلائیں
-.\build\BUILD.ps1
-
-# یا خود سے:
-cd src\SamaHesab.WPF
-dotnet publish -c Release -r win-x64 --self-contained -p:PublishSingleFile=true
-Copy-Item "bin\Release\net9.0-windows\win-x64\publish\SamaHesab.WPF.exe" "..\..\build\SamaHesab.exe"
+# MSI installer (requires WiX v5: dotnet tool install --global wix --version 5.0.2)
+wix build installer/Package.wxs -o build/SamaHesab_Setup.msi
 ```
-
----
-
-## 📋 Version Info
-
-| فائل | Version | Size | تاریخ |
-|------|---------|------|--------|
-| SamaHesab.exe | 1.0.0 | TBD | TBD |
-| SamaHesab-Setup.exe | 1.0.0 | TBD | TBD |
-
----
-
-## 💻 System Requirements
-
-### برائے SamaHesab.exe (Self-Contained)
-```
-✅ Windows 10 / 11
-✅ 500 MB free space
-✅ SQL Server / Docker database
-✅ کوئی اضافی installation نہیں
-```
-
-### برائے SamaHesab-Setup.exe (Installer)
-```
-✅ Windows 10 / 11
-✅ 500 MB free space
-✅ SQL Server 2019+ یا Docker
-```
-
----
-
-## 🔗 Release Links
-
-- GitHub Releases: [SamaHesab Releases](https://github.com/kish210/SamaHesab/releases)
-- Docker Setup: [DOCKER_README.md](../DOCKER_README.md)
-- Build Instructions: [BUILD_INSTRUCTIONS.md](./BUILD_INSTRUCTIONS.md)
-
----
-
-## 📝 Build History
-
-### v1.0.0 (پہلی بار)
-```
-✅ WPF UI مکمل
-✅ Docker support
-✅ تمام 14 modules
-✅ Production ready
-```
-
----
-
-## 🐛 مسائل؟
-
-### EXE کام نہیں کر رہی؟
-```
-1. Docker database چلتی ہے؟
-   docker-compose ps
-
-2. Connection string صحیح ہے؟
-   appsettings.json چیک کریں
-
-3. SQL Server/Docker سے متصل ہو؟
-   Test connection
-```
-
----
-
-**آخری update: 2026-06-01** 📅

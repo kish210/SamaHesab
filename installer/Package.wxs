@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Wix xmlns="http://wixtoolset.org/schemas/v4/wxs">
+
+  <Package Name="سما حساب - Sama Hesab"
+           Manufacturer="Sama Software"
+           Version="1.0.0.0"
+           UpgradeCode="B6E2F1A4-3C7D-4E9A-9F21-1A2B3C4D5E6F"
+           Scope="perMachine"
+           Compressed="yes">
+
+    <MajorUpgrade DowngradeErrorMessage="نسخه جدیدتری از سما حساب نصب شده است." />
+
+    <MediaTemplate EmbedCab="yes" />
+
+    <!-- Install directory: Program Files\SamaHesab -->
+    <StandardDirectory Id="ProgramFiles6432Folder">
+      <Directory Id="INSTALLFOLDER" Name="SamaHesab" />
+    </StandardDirectory>
+
+    <!-- Start Menu shortcut folder -->
+    <StandardDirectory Id="ProgramMenuFolder">
+      <Directory Id="AppShortcutFolder" Name="سما حساب" />
+    </StandardDirectory>
+
+    <!-- Main application files -->
+    <ComponentGroup Id="AppFiles" Directory="INSTALLFOLDER">
+      <Component Id="MainExe" Guid="C1A2B3C4-D5E6-4F70-8192-A3B4C5D6E7F8">
+        <File Id="SamaHesabExe"
+              Source="..\build\app\SamaHesab.WPF.exe"
+              Name="SamaHesab.exe"
+              KeyPath="yes" />
+      </Component>
+      <Component Id="AppConfig" Guid="D2B3C4D5-E6F7-4081-92A3-B4C5D6E7F809">
+        <File Id="AppSettings"
+              Source="..\build\app\appsettings.json"
+              Name="appsettings.json"
+              KeyPath="yes" />
+      </Component>
+    </ComponentGroup>
+
+    <!-- Start Menu shortcut -->
+    <Component Id="StartMenuShortcut" Directory="AppShortcutFolder"
+               Guid="E3C4D5E6-F708-4192-A3B4-C5D6E7F8091A">
+      <Shortcut Id="AppStartMenuShortcut"
+                Name="سما حساب"
+                Description="سامانه جامع حسابداری سما حساب"
+                Target="[INSTALLFOLDER]SamaHesab.exe"
+                WorkingDirectory="INSTALLFOLDER" />
+      <RemoveFolder Id="RemoveAppShortcutFolder" On="uninstall" />
+      <RegistryValue Root="HKCU" Key="Software\SamaSoftware\SamaHesab"
+                     Name="installed" Type="integer" Value="1" KeyPath="yes" />
+    </Component>
+
+    <!-- Desktop shortcut -->
+    <StandardDirectory Id="DesktopFolder">
+      <Component Id="DesktopShortcut" Guid="F4D5E6F7-0819-42A3-B4C5-D6E7F8091A2B">
+        <Shortcut Id="AppDesktopShortcut"
+                  Name="سما حساب"
+                  Description="سامانه جامع حسابداری سما حساب"
+                  Target="[INSTALLFOLDER]SamaHesab.exe"
+                  WorkingDirectory="INSTALLFOLDER" />
+        <RegistryValue Root="HKCU" Key="Software\SamaSoftware\SamaHesab"
+                       Name="desktop" Type="integer" Value="1" KeyPath="yes" />
+      </Component>
+    </StandardDirectory>
+
+    <Feature Id="Main" Title="سما حساب" Level="1">
+      <ComponentGroupRef Id="AppFiles" />
+      <ComponentRef Id="StartMenuShortcut" />
+      <ComponentRef Id="DesktopShortcut" />
+    </Feature>
+
+  </Package>
+</Wix>
