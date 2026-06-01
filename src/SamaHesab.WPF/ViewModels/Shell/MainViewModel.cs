@@ -13,6 +13,7 @@ using SamaHesab.WPF.ViewModels.HRM;
 using SamaHesab.WPF.ViewModels.Reports;
 using SamaHesab.WPF.ViewModels.Settings;
 using Microsoft.Extensions.DependencyInjection;
+using System.Collections.ObjectModel;
 using System.Windows;
 using System.Windows.Threading;
 
@@ -26,11 +27,17 @@ public partial class MainViewModel : BaseViewModel
     private readonly DispatcherTimer _clockTimer;
 
     [ObservableProperty] private BaseViewModel? _currentPage;
+    [ObservableProperty] private WorkspaceTab? _selectedTab;
+    public ObservableCollection<WorkspaceTab> OpenTabs { get; } = new();
     [ObservableProperty] private string _activeMenu = "Dashboard";
+    [ObservableProperty] private string _quickSearch = string.Empty;
+    [ObservableProperty] private int _notificationCount = 3;
+    [ObservableProperty] private int _messageCount = 2;
+    [ObservableProperty] private string _currentBranch = "شعبه مرکزی";
     [ObservableProperty] private string _currentPageTitle = "داشبورد";
     [ObservableProperty] private string _currentUserName = string.Empty;
     [ObservableProperty] private string _currentUserRole = string.Empty;
-    [ObservableProperty] private string _companyName = "سما حساب";
+    [ObservableProperty] private string _companyName = "سماع رایانه کیش";
     [ObservableProperty] private string _todayPersianDate = string.Empty;
     [ObservableProperty] private string _statusMessage = "آماده";
     [ObservableProperty] private bool _isDarkTheme = true;
@@ -103,11 +110,43 @@ public partial class MainViewModel : BaseViewModel
     private async Task NavigateToAsync(string page)
     {
         if (!_pages.TryGetValue(page, out var entry)) return;
+
+        // Activate the tab if it is already open
+        var existing = OpenTabs.FirstOrDefault(t => t.Key == page);
+        if (existing != null)
+        {
+            SelectedTab = existing;
+            ActiveMenu = page;
+            CurrentPageTitle = entry.Title;
+            return;
+        }
+
+        var vm = entry.Factory();
+        var tab = new WorkspaceTab(page, entry.Title, vm, canClose: page != "Dashboard");
+        OpenTabs.Add(tab);
+        SelectedTab = tab;
+        CurrentPage = vm;
         ActiveMenu = page;
         CurrentPageTitle = entry.Title;
-        var vm = entry.Factory();
-        CurrentPage = vm;
         await vm.LoadAsync();
+    }
+
+    partial void OnSelectedTabChanged(WorkspaceTab? value)
+    {
+        if (value == null) return;
+        CurrentPage = value.Content;
+        ActiveMenu = value.Key;
+        CurrentPageTitle = value.Title;
+    }
+
+    [RelayCommand]
+    private void CloseTab(WorkspaceTab? tab)
+    {
+        if (tab == null || !tab.CanClose) return;
+        var idx = OpenTabs.IndexOf(tab);
+        OpenTabs.Remove(tab);
+        if (SelectedTab == tab)
+            SelectedTab = OpenTabs.Count > 0 ? OpenTabs[System.Math.Min(idx, OpenTabs.Count - 1)] : null;
     }
 
     [RelayCommand]
@@ -145,5 +184,30 @@ public partial class MainViewModel : BaseViewModel
 
         _clockTimer.Stop();
         System.Windows.Application.Current.Shutdown();
+    }
+
+    [RelayCommand] private async Task ShowNotificationsAsync() => await _dialogService.ShowInfoAsync($"{NotificationCount} اعلان جدید دارید.");
+    [RelayCommand] private async Task ShowMessagesAsync() => await _dialogService.ShowInfoAsync($"{MessageCount} پیام جدید دارید.");
+    [RelayCommand] private async Task OpenCalculatorAsync()
+    {
+        try { System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo("calc.exe") { UseShellExecute = true }); }
+        catch { await _dialogService.ShowInfoAsync("ماشین‌حساب در دسترس نیست."); }
+    }
+    [RelayCommand] private async Task ChangeBranchAsync() => await _dialogService.ShowInfoAsync("تغییر شعبه (در نسخه بعدی فعال می‌شود).");
+}
+
+public partial class WorkspaceTab : CommunityToolkit.Mvvm.ComponentModel.ObservableObject
+{
+    public string Key { get; }
+    public string Title { get; }
+    public bool CanClose { get; }
+    public BaseViewModel Content { get; }
+
+    public WorkspaceTab(string key, string title, BaseViewModel content, bool canClose)
+    {
+        Key = key;
+        Title = title;
+        Content = content;
+        CanClose = canClose;
     }
 }

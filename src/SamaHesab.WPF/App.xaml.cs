@@ -144,7 +144,16 @@ public partial class App : System.Windows.Application
             Log.Error(ex, "خطا در اجرای migration پایگاه داده");
         }
 
-        // ─── Show Login ───────────────────────────────────────────────────────
+        // ─── Show Login (or skip straight to the shell for UI smoke-tests) ─────
+        if (Environment.GetEnvironmentVariable("SAMA_SKIP_LOGIN") == "1")
+        {
+            ((Services.CurrentUserService)_host.Services.GetRequiredService<ICurrentUserService>())
+                .SetCurrentUser(1, 1, 1, "admin", "مدیر سیستم",
+                    new[] { "ADMIN" }, Array.Empty<string>());
+            _host.Services.GetRequiredService<MainWindow>().Show();
+            return;
+        }
+
         var loginWindow = _host.Services.GetRequiredService<LoginWindow>();
         loginWindow.Show();
     }
