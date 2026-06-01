@@ -15,11 +15,11 @@ public static class AppSettingsStore
     public static string FilePath => Path.Combine(AppDataDir, "settings.user.json");
     public static string LogDirectory => Path.Combine(AppDataDir, "logs");
 
-    // Default points to the Docker SQL Server defined in docker-compose.yml
-    // (localhost,1433 / sa / SamaHesab@2024) so it works out-of-the-box with `docker-compose up -d`.
+    // Default points to a local SQL Server Express instance (Windows auth).
+    // Change it from the login screen's "تنظیمات اتصال" if your server differs.
     public const string DefaultConnectionString =
-        "Server=localhost,1433;Database=SamaHesab;User Id=sa;Password=SamaHesab@2024;" +
-        "TrustServerCertificate=True;Encrypt=False;MultipleActiveResultSets=True;";
+        "Server=.\\SQLEXPRESS;Database=SamaHesab;Trusted_Connection=True;" +
+        "TrustServerCertificate=True;Encrypt=False;MultipleActiveResultSets=True;Connect Timeout=5;";
 
     private class Model
     {

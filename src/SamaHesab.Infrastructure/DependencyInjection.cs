@@ -23,7 +23,8 @@ public static class DependencyInjection
         services.AddDbContext<ApplicationDbContext>(options =>
             options.UseSqlServer(connectionString, sqlOptions =>
             {
-                sqlOptions.EnableRetryOnFailure(3, TimeSpan.FromSeconds(5), null);
+                sqlOptions.EnableRetryOnFailure(1, TimeSpan.FromSeconds(2), null);
+                sqlOptions.CommandTimeout(10);
             }));
 
         // Repositories

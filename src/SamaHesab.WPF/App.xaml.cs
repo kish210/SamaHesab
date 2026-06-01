@@ -132,17 +132,23 @@ public partial class App : System.Windows.Application
 
         await _host.StartAsync();
 
-        // ─── Migrate Database ─────────────────────────────────────────────────
-        try
+        // ─── Database connectivity check (NON-blocking) ───────────────────────
+        // Login does not need the DB, so never block the UI on it. Just probe in
+        // the background and log; the schema is created from the SQL scripts.
+        _ = Task.Run(async () =>
         {
-            using var scope = _host.Services.CreateScope();
-            var db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
-            await db.Database.MigrateAsync();
-        }
-        catch (Exception ex)
-        {
-            Log.Error(ex, "خطا در اجرای migration پایگاه داده");
-        }
+            try
+            {
+                using var scope = _host.Services.CreateScope();
+                var db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+                var ok = await db.Database.CanConnectAsync();
+                Log.Information("اتصال پایگاه داده: {Ok}", ok ? "برقرار" : "ناموفق");
+            }
+            catch (Exception ex)
+            {
+                Log.Warning(ex, "اتصال اولیه به پایگاه داده برقرار نشد");
+            }
+        });
 
         // ─── Show Login (or skip straight to the shell for UI smoke-tests) ─────
         if (Environment.GetEnvironmentVariable("SAMA_SKIP_LOGIN") == "1")
