@@ -54,7 +54,9 @@ public interface IDialogService
     Task ShowErrorAsync(string message, string title = "خطا");
     Task ShowSuccessAsync(string message, string title = "موفق");
     Task ShowInfoAsync(string message, string title = "اطلاعات");
+    Task ShowWarningAsync(string message, string title = "هشدار");
     Task<string?> ShowInputAsync(string prompt, string title = "ورود اطلاعات");
+    Task<string?> PromptAsync(string message, string title = "ورودی", string defaultValue = "");
 }
 
 public class DialogService : IDialogService
@@ -100,11 +102,24 @@ public class DialogService : IDialogService
         return Task.CompletedTask;
     }
 
+    public Task ShowWarningAsync(string message, string title = "هشدار")
+    {
+        System.Windows.MessageBox.Show(message, title,
+            System.Windows.MessageBoxButton.OK,
+            System.Windows.MessageBoxImage.Warning,
+            System.Windows.MessageBoxResult.OK,
+            System.Windows.MessageBoxOptions.RightAlign | System.Windows.MessageBoxOptions.RtlReading);
+        return Task.CompletedTask;
+    }
+
     public Task<string?> ShowInputAsync(string prompt, string title = "ورود اطلاعات")
     {
         // Simple implementation - in production use a custom dialog
         return Task.FromResult<string?>(null);
     }
+
+    public Task<string?> PromptAsync(string message, string title = "ورودی", string defaultValue = "")
+        => Task.FromResult<string?>(defaultValue);
 }
 
 public interface IThemeService

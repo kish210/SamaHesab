@@ -4,7 +4,7 @@ using System.Windows.Controls;
 
 namespace SamaHesab.WPF.Controls;
 
-public partial class PersianDatePicker : UserControl
+public partial class PersianDatePicker : System.Windows.Controls.UserControl
 {
     private static readonly PersianCalendar _persianCalendar = new();
 

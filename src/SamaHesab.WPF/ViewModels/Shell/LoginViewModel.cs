@@ -1,6 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Microsoft.Extensions.DependencyInjection;
+using SamaHesab.Application.Common.Interfaces;
 using SamaHesab.WPF.Services;
 using SamaHesab.WPF.ViewModels.Shell;
 using System.Collections.ObjectModel;
@@ -24,10 +25,12 @@ public partial class LoginViewModel : ObservableObject
     public ObservableCollection<CompanyItem> Companies { get; } = new();
 
     private readonly IDialogService _dialogService;
+    private readonly ICurrentUserService _currentUser;
 
-    public LoginViewModel(IDialogService dialogService)
+    public LoginViewModel(IDialogService dialogService, ICurrentUserService currentUser)
     {
         _dialogService = dialogService;
+        _currentUser = currentUser;
         LoadCompanies();
     }
 
@@ -66,15 +69,15 @@ public partial class LoginViewModel : ObservableObject
             // Set current user
             var roles = new List<string> { "ADMIN" };
             var perms = new List<string>();
-            CurrentUserService.SetUser(new CurrentUser(1, SelectedCompanyId, 1, Username,
-                Username == "admin" ? "مدیر سیستم" : Username, roles, perms));
+            ((CurrentUserService)_currentUser).SetCurrentUser(1, SelectedCompanyId, 1, Username,
+                Username == "admin" ? "مدیر سیستم" : Username, roles, perms);
 
             // Open Main Window
             var mainWindow = App.GetService<Views.Shell.MainWindow>();
             mainWindow.Show();
 
             // Close login
-            foreach (Window w in Application.Current.Windows)
+            foreach (Window w in System.Windows.Application.Current.Windows)
                 if (w is Views.Shell.LoginWindow) { w.Close(); break; }
         }
         finally

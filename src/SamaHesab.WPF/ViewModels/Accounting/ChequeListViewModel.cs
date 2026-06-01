@@ -37,7 +37,24 @@ public partial class ChequeListViewModel : BaseViewModel
         await ExecuteAsync(async () =>
         {
             var today = _calendar.GetCurrentPersianDate();
-            var cheques = await _chequeRepository.GetByStatusAsync(_currentUser.CompanyId!.Value, SelectedStatus == "همه" ? "" : SelectedStatus);
+            var companyId = _currentUser.CompanyId!.Value;
+            IReadOnlyList<Domain.Entities.Accounting.Cheque> cheques;
+            if (SelectedStatus == "همه" || string.IsNullOrEmpty(SelectedStatus))
+            {
+                cheques = await _chequeRepository.FindAsync(c => c.CompanyId == companyId);
+            }
+            else
+            {
+                var status = SelectedStatus switch
+                {
+                    "وصول شده" => Domain.Enums.ChequeStatus.Cleared,
+                    "برگشت خورده" => Domain.Enums.ChequeStatus.Returned,
+                    "واگذار شده" => Domain.Enums.ChequeStatus.Transferred,
+                    "ابطال شده" => Domain.Enums.ChequeStatus.Cancelled,
+                    _ => Domain.Enums.ChequeStatus.InProcess
+                };
+                cheques = await _chequeRepository.GetByStatusAsync(companyId, status);
+            }
             Cheques.Clear();
             foreach (var c in cheques)
                 Cheques.Add(new ChequeItem(c.Id, c.ChequeType.ToString(), c.ChequeNumber, c.BankName, c.Amount, c.DueDate, c.Status.ToString(), c.IssuedBy ?? ""));

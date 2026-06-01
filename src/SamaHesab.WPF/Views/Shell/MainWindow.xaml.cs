@@ -35,7 +35,7 @@ public partial class MainWindow : Window
             "خروج از سیستم",
             MessageBoxButton.YesNo,
             MessageBoxImage.Question);
-        if (result == MessageBoxResult.Yes) Application.Current.Shutdown();
+        if (result == MessageBoxResult.Yes) System.Windows.Application.Current.Shutdown();
     }
 
     private void MaximizeOrRestore()

@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore.Storage;
 using SamaHesab.Domain.Interfaces.Repositories;
+using SamaHesab.Infrastructure.Data;
 
 namespace SamaHesab.Infrastructure.Repositories;
 

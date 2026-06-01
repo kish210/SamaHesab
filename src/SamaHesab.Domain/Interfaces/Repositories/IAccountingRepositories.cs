@@ -1,4 +1,4 @@
-﻿using System.Linq.Expressions;
+﻿using SamaHesab.Domain.Enums;
 
 namespace SamaHesab.Domain.Interfaces.Repositories;
 
@@ -24,7 +24,7 @@ public interface IAccountRepository : IRepository<Entities.Accounting.Account>
 public interface IChequeRepository : IRepository<Entities.Accounting.Cheque>
 {
     Task<List<Entities.Accounting.Cheque>> GetByStatusAsync(
-        int companyId, Entities.Accounting.ChequeStatus status, CancellationToken ct = default);
+        int companyId, ChequeStatus status, CancellationToken ct = default);
     Task<List<Entities.Accounting.Cheque>> GetDueTodayAsync(int companyId, CancellationToken ct = default);
     Task<List<Entities.Accounting.Cheque>> GetOverdueAsync(int companyId, CancellationToken ct = default);
 }

@@ -189,4 +189,5 @@ public partial class SalesInvoiceItemRow : ObservableObject
 
 public record CustomerItem(int Id, string Name, string? Mobile);
 public record WarehouseItem(int Id, string Name);
+public record ProductSearchResult(int Id, string Code, string Name, string? Barcode, decimal Price, decimal TaxRate);
 

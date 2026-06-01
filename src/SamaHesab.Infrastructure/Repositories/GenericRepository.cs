@@ -1,6 +1,7 @@
 ﻿using System.Linq.Expressions;
 using Microsoft.EntityFrameworkCore;
 using SamaHesab.Domain.Interfaces.Repositories;
+using SamaHesab.Infrastructure.Data;
 
 namespace SamaHesab.Infrastructure.Repositories;
 

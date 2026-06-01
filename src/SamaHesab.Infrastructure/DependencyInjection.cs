@@ -24,7 +24,6 @@ public static class DependencyInjection
             options.UseSqlServer(connectionString, sqlOptions =>
             {
                 sqlOptions.EnableRetryOnFailure(3, TimeSpan.FromSeconds(5), null);
-                sqlOptions.UseNodaTime();
             }));
 
         // Repositories
@@ -45,17 +44,21 @@ public static class DependencyInjection
         // SMS
         var smsProvider = configuration["Sms:Provider"] ?? "null";
         services.AddScoped<ISmsProvider>(sp =>
-            smsProvider switch
+        {
+            var http = new HttpClient();
+            var sender = configuration["Sms:Sender"] ?? "";
+            return smsProvider switch
             {
-                "kavenegar" => new KavenegarProvider(configuration["Sms:ApiKey"] ?? ""),
-                "farazsms" => new FarazSmsProvider(
+                "kavenegar" => new KavenegarProvider(http, configuration["Sms:ApiKey"] ?? "", sender),
+                "farazsms" => new FarazSmsProvider(http,
                     configuration["Sms:Username"] ?? "",
-                    configuration["Sms:Password"] ?? ""),
-                "melipayamak" => new MeliPayamakProvider(
+                    configuration["Sms:Password"] ?? "", sender),
+                "melipayamak" => new MeliPayamakProvider(http,
                     configuration["Sms:Username"] ?? "",
-                    configuration["Sms:Password"] ?? ""),
-                _ => new NullSmsProvider()
-            });
+                    configuration["Sms:Password"] ?? "", sender),
+                _ => (ISmsProvider)new NullSmsProvider()
+            };
+        });
         services.AddScoped<ISmsService, SmsService>();
 
         return services;

@@ -83,7 +83,7 @@ public partial class MainViewModel : BaseViewModel
         _clockTimer.Start();
 
         // Navigation service
-        navigationService.NavigationRequested += OnNavigationRequested;
+        navigationService.Navigated += OnNavigationRequested;
     }
 
     public override async Task LoadAsync()
@@ -94,8 +94,8 @@ public partial class MainViewModel : BaseViewModel
         await NavigateToAsync("Dashboard");
     }
 
-    private void OnNavigationRequested(string page) =>
-        Application.Current.Dispatcher.InvokeAsync(() => NavigateToAsync(page));
+    private void OnNavigationRequested(object? sender, NavigationEventArgs e) =>
+        System.Windows.Application.Current.Dispatcher.InvokeAsync(() => NavigateToAsync(e.ViewName));
 
     [RelayCommand]
     private async Task NavigateAsync(string page) => await NavigateToAsync(page);
@@ -118,7 +118,7 @@ public partial class MainViewModel : BaseViewModel
             ? "Assets/Themes/Dark.xaml"
             : "Assets/Themes/Light.xaml";
 
-        var app = Application.Current;
+        var app = System.Windows.Application.Current;
         var existing = app.Resources.MergedDictionaries
             .FirstOrDefault(d => d.Source?.OriginalString.Contains("Theme") == true
                               || d.Source?.OriginalString.Contains("Dark") == true
@@ -144,6 +144,6 @@ public partial class MainViewModel : BaseViewModel
         if (result != System.Windows.MessageBoxResult.Yes) return;
 
         _clockTimer.Stop();
-        Application.Current.Shutdown();
+        System.Windows.Application.Current.Shutdown();
     }
 }

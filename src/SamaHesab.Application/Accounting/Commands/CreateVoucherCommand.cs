@@ -63,7 +63,7 @@ public class CreateVoucherCommandHandler : IRequestHandler<CreateVoucherCommand,
         try
         {
             var companyId = _currentUser.CompanyId!.Value;
-            var voucherNumber = await _voucherRepository.GetNextNumberAsync(companyId, request.FiscalYearId, ct);
+            var voucherNumber = await _voucherRepository.GetNextNumberAsync(companyId, ct);
 
             var voucher = Voucher.Create(
                 companyId, request.BranchId, request.FiscalYearId,

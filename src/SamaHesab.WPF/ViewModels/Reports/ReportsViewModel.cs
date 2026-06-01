@@ -4,6 +4,7 @@ using SamaHesab.Application.Common.Interfaces;
 using SamaHesab.WPF.Services;
 using SamaHesab.WPF.ViewModels.Shell;
 using System.Collections.ObjectModel;
+using System.IO;
 
 namespace SamaHesab.WPF.ViewModels.Reports;
 

@@ -3,6 +3,8 @@ using Microsoft.EntityFrameworkCore;
 using SamaHesab.Domain.Entities.Accounting;
 using SamaHesab.Domain.Entities.Inventory;
 using SamaHesab.Domain.Interfaces.Repositories;
+using SamaHesab.Domain.Enums;
+using SamaHesab.Infrastructure.Data;
 
 namespace SamaHesab.Infrastructure.Repositories;
 
@@ -16,7 +18,8 @@ public class VoucherRepository : GenericRepository<Voucher>, IVoucherRepository
     {
         return await DbSet
             .Where(v => v.CompanyId == companyId && v.FiscalYearId == fiscalYearId
-                && v.VoucherDate >= fromDate && v.VoucherDate <= toDate)
+                && string.Compare(v.VoucherDate, fromDate) >= 0
+                && string.Compare(v.VoucherDate, toDate) <= 0)
             .ToListAsync(ct);
     }
 
@@ -72,10 +75,20 @@ public class ChequeRepository : GenericRepository<Cheque>, IChequeRepository
         => await DbSet.Where(c => c.CompanyId == companyId && c.Status == status).ToListAsync(ct);
 
     public async Task<List<Cheque>> GetDueTodayAsync(int companyId, CancellationToken ct = default)
-        => await DbSet.Where(c => c.CompanyId == companyId && c.DueDate <= DateTime.Today).ToListAsync(ct);
+    {
+        var today = DateTime.Now.ToString("yyyy/MM/dd");
+        return await DbSet.Where(c => c.CompanyId == companyId
+            && c.Status == ChequeStatus.InProcess
+            && string.Compare(c.DueDate, today) == 0).ToListAsync(ct);
+    }
 
     public async Task<List<Cheque>> GetOverdueAsync(int companyId, CancellationToken ct = default)
-        => await DbSet.Where(c => c.CompanyId == companyId && c.DueDate < DateTime.Today).ToListAsync(ct);
+    {
+        var today = DateTime.Now.ToString("yyyy/MM/dd");
+        return await DbSet.Where(c => c.CompanyId == companyId
+            && c.Status == ChequeStatus.InProcess
+            && string.Compare(c.DueDate, today) < 0).ToListAsync(ct);
+    }
 }
 
 // Inventory Repositories

@@ -86,7 +86,7 @@ public class CreatePurchaseInvoiceCommandHandler : IRequestHandler<CreatePurchas
                 if (stockItem == null)
                 {
                     stockItem = Domain.Entities.Inventory.StockItem.Create(
-                        companyId, item.ProductId, request.WarehouseId);
+                        item.ProductId, request.WarehouseId);
                     await _stockRepository.AddAsync(stockItem, ct);
                 }
 

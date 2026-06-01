@@ -1,8 +1,8 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
+    <OutputType>WinExe</OutputType>
     <TargetFramework>net9.0-windows</TargetFramework>
     <UseWPF>true</UseWPF>
-    <UseWindowsForms>true</UseWindowsForms>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <RootNamespace>SamaHesab.WPF</RootNamespace>
@@ -13,7 +13,6 @@
     <FileVersion>1.0.0.0</FileVersion>
     <Company>سما نرم‌افزار</Company>
     <Product>سامانه جامع سما حساب</Product>
-    <Win32Resource />
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="..\SamaHesab.Application\SamaHesab.Application.csproj" />

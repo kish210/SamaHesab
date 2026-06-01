@@ -12,7 +12,7 @@ public partial class LoginWindow : Window
         InitializeComponent();
         _vm = viewModel;
         DataContext = viewModel;
-        Resources["BoolVis"] = new System.Windows.Data.BooleanToVisibilityConverter();
+        Resources["BoolVis"] = new System.Windows.Controls.BooleanToVisibilityConverter();
         Loaded += (_, _) => TxtUsername?.Focus();
     }
 
@@ -20,5 +20,5 @@ public partial class LoginWindow : Window
         _vm.Password = PwdBox.Password;
 
     private void CloseButton_Click(object sender, RoutedEventArgs e) =>
-        Application.Current.Shutdown();
+        System.Windows.Application.Current.Shutdown();
 }

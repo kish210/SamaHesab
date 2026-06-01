@@ -43,7 +43,7 @@ public partial class VoucherEditViewModel : BaseViewModel
 
     public ObservableCollection<VoucherItemRow> Items { get; } = new();
     public List<VoucherTypeItem> VoucherTypes { get; private set; } = new();
-    public List<AccountItem> LeafAccounts { get; private set; } = new();
+    public List<VoucherAccountItem> LeafAccounts { get; private set; } = new();
     public List<CostCenterItem> CostCenters { get; private set; } = new();
 
     public VoucherEditViewModel(IMediator mediator, IAccountRepository accountRepo,
@@ -74,7 +74,7 @@ public partial class VoucherEditViewModel : BaseViewModel
         OnPropertyChanged(nameof(CostCenters));
 
         var accounts = await _accountRepo.GetLeafAccountsAsync(_currentUser.CompanyId ?? 1);
-        LeafAccounts = accounts.Select(a => new AccountItem(a.Id, a.Code, a.Name)).ToList();
+        LeafAccounts = accounts.Select(a => new VoucherAccountItem(a.Id, a.Code, a.Name)).ToList();
         OnPropertyChanged(nameof(LeafAccounts));
 
         await Task.CompletedTask;
@@ -207,6 +207,6 @@ public partial class VoucherItemRow : ObservableObject
 }
 
 public record VoucherTypeItem(int Id, string Name);
-public record AccountItem(int Id, string Code, string Name);
+public record VoucherAccountItem(int Id, string Code, string Name);
 public record CostCenterItem(int Id, string Name);
 

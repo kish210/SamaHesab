@@ -78,8 +78,8 @@ public partial class BackupViewModel : BaseViewModel
     [RelayCommand]
     private async Task BrowseBackupPathAsync()
     {
-        var dlg = new System.Windows.Forms.FolderBrowserDialog { Description = "مسیر پشتیبان‌گیری را انتخاب کنید" };
-        if (dlg.ShowDialog() == System.Windows.Forms.DialogResult.OK) BackupPath = dlg.SelectedPath;
+        var dlg = new Microsoft.Win32.OpenFolderDialog { Title = "مسیر پشتیبان‌گیری را انتخاب کنید" };
+        if (dlg.ShowDialog() == true) BackupPath = dlg.FolderName;
         await Task.CompletedTask;
     }
 }

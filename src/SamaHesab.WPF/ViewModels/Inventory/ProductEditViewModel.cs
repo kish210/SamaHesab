@@ -58,7 +58,7 @@ public partial class ProductEditViewModel : BaseViewModel
                 WholesalePrice: WholesalePrice, ConsumerPrice: ConsumerPrice,
                 MinStock: MinStock, MaxStock: MaxStock,
                 HasSerial: HasSerial, HasBatch: HasBatch, HasExpiry: HasExpiry,
-                ValuationMethod: ValuationMethod == "FIFO" ? ValuationMethod.FIFO : Domain.Enums.ValuationMethod.WeightedAverage,
+                ValuationMethod: ValuationMethod == "FIFO" ? Domain.Enums.ValuationMethod.FIFO : Domain.Enums.ValuationMethod.WeightedAverage,
                 TaxRate: TaxRate, Description: Description);
 
             var result = await _mediator.Send(command);

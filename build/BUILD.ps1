@@ -14,7 +14,7 @@ Write-Host "══════════════════════�
 Write-Host ""
 
 $rootDir = Split-Path -Parent (Split-Path -Parent $PSScriptRoot)
-$wfprojDir = Join-Path $rootDir "src\SamaHesab.WPF"
+$wfprojDir = Join-Path $rootDir "D:\duc\sama-hesab\src\SamaHesab.WPF"
 
 Write-Host "📍 Project Directory: $wfprojDir" -ForegroundColor Yellow
 
@@ -29,7 +29,7 @@ if (-not $dotnetPath) {
 Write-Host "✅ .NET CLI found" -ForegroundColor Green
 
 # Check if Visual Studio solution exists
-$slnFile = Join-Path $rootDir "SamaHesab.sln"
+$slnFile = Join-Path $rootDir "D:\duc\sama-hesab\src\SamaHesab.sln"
 if (-not (Test-Path $slnFile)) {
     Write-Host "❌ Solution file not found: $slnFile" -ForegroundColor Red
     exit 1

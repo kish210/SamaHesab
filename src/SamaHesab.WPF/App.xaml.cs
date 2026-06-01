@@ -25,7 +25,7 @@ using SamaHesab.WPF.Views.Shell;
 
 namespace SamaHesab.WPF;
 
-public partial class App : Application
+public partial class App : System.Windows.Application
 {
     private IHost? _host;
 
@@ -64,7 +64,7 @@ public partial class App : Application
                 // WPF Services
                 services.AddSingleton<IDialogService, DialogService>();
                 services.AddSingleton<INavigationService, NavigationService>();
-                services.AddScoped<ICurrentUserService, CurrentUserService>();
+                services.AddSingleton<ICurrentUserService, CurrentUserService>();
 
                 // ViewModels
                 services.AddTransient<MainViewModel>();

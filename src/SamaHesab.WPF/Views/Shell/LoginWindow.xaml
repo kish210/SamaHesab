@@ -90,7 +90,7 @@
                 </Border>
 
                 <!-- Login Button -->
-                <Button Content="{Binding LoginButtonText}" Style="{StaticResource PrimaryButton}"
+                <Button Content="{Binding LoginButtonText}"
                         Height="48" FontSize="15" FontFamily="{StaticResource VazirFont}"
                         Command="{Binding LoginCommand}"
                         IsEnabled="{Binding IsNotLoading}">

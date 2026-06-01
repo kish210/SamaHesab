@@ -99,3 +99,7 @@ temp/
 # Test Results
 TestResults/
 *.trx
+
+# Build output (too large for git; use Releases)
+build/standalone/
+build/*.exe
