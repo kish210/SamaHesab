@@ -121,15 +121,27 @@ public partial class MainViewModel : BaseViewModel
             return;
         }
 
-        var vm = entry.Factory();
-        var tab = new WorkspaceTab(page, entry.Title, vm, canClose: page != "Dashboard");
-        OpenTabs.Add(tab);
-        SelectedTab = tab;
-        CurrentPage = vm;
-        ActiveMenu = page;
-        CurrentPageTitle = entry.Title;
-        await vm.LoadAsync();
+        // Serialize page creation/loading so two quick clicks never run DB
+        // queries concurrently on the shared DbContext.
+        await _navLock.WaitAsync();
+        try
+        {
+            var vm = entry.Factory();
+            var tab = new WorkspaceTab(page, entry.Title, vm, canClose: page != "Dashboard");
+            OpenTabs.Add(tab);
+            SelectedTab = tab;
+            CurrentPage = vm;
+            ActiveMenu = page;
+            CurrentPageTitle = entry.Title;
+            await vm.LoadAsync();
+        }
+        finally
+        {
+            _navLock.Release();
+        }
     }
+
+    private readonly System.Threading.SemaphoreSlim _navLock = new(1, 1);
 
     partial void OnSelectedTabChanged(WorkspaceTab? value)
     {
