@@ -33,11 +33,37 @@ public partial class App : System.Windows.Application
     {
         base.OnStartup(e);
 
-        // ─── Serilog ──────────────────────────────────────────────────────────
+        // ─── Surface every startup/runtime error instead of silently exiting ──
+        DispatcherUnhandledException += (_, ev) =>
+        {
+            ShowFatal(ev.Exception);
+            ev.Handled = true;
+        };
+        AppDomain.CurrentDomain.UnhandledException += (_, ev) =>
+            ShowFatal(ev.ExceptionObject as Exception);
+
+        try
+        {
+            await StartAppAsync(e);
+        }
+        catch (Exception ex)
+        {
+            ShowFatal(ex);
+        }
+    }
+
+    private async Task StartAppAsync(StartupEventArgs e)
+    {
+        // Ensure %AppData%\SamaHesab + a default connection string exist (writable).
+        Services.AppSettingsStore.EnsureInitialized();
+
+        // ─── Serilog (writable log folder) ────────────────────────────────────
         Log.Logger = new LoggerConfiguration()
             .MinimumLevel.Information()
-            .WriteTo.File("logs/samaHesab-.txt", rollingInterval: RollingInterval.Day,
-                          retainedFileCountLimit: 30, fileSizeLimitBytes: 10_000_000)
+            .WriteTo.File(
+                System.IO.Path.Combine(Services.AppSettingsStore.LogDirectory, "samaHesab-.txt"),
+                rollingInterval: RollingInterval.Day,
+                retainedFileCountLimit: 30, fileSizeLimitBytes: 10_000_000)
             .CreateLogger();
 
         // ─── Host ─────────────────────────────────────────────────────────────
@@ -45,8 +71,10 @@ public partial class App : System.Windows.Application
             .ConfigureAppConfiguration((ctx, cfg) =>
             {
                 cfg.SetBasePath(AppDomain.CurrentDomain.BaseDirectory)
-                   .AddJsonFile("appsettings.json", optional: false)
+                   .AddJsonFile("appsettings.json", optional: true)
                    .AddJsonFile($"appsettings.{ctx.HostingEnvironment.EnvironmentName}.json", optional: true)
+                   // User-editable file (overrides appsettings) – set from the login Settings dialog.
+                   .AddJsonFile(Services.AppSettingsStore.FilePath, optional: true, reloadOnChange: true)
                    .AddEnvironmentVariables();
             })
             .ConfigureServices((ctx, services) =>
@@ -130,6 +158,25 @@ public partial class App : System.Windows.Application
         }
         Log.CloseAndFlush();
         base.OnExit(e);
+    }
+
+    private static void ShowFatal(Exception? ex)
+    {
+        var message = ex?.ToString() ?? "خطای ناشناخته";
+        try { Log.Error(ex, "Unhandled startup/runtime error"); } catch { }
+        try
+        {
+            System.IO.File.WriteAllText(
+                System.IO.Path.Combine(Services.AppSettingsStore.AppDataDir, "fatal-error.txt"),
+                message);
+        }
+        catch { }
+
+        MessageBox.Show(
+            "خطا در اجرای برنامه:\n\n" + (ex?.Message ?? "نامشخص") +
+            "\n\nجزئیات در فایل زیر ذخیره شد:\n" +
+            System.IO.Path.Combine(Services.AppSettingsStore.AppDataDir, "fatal-error.txt"),
+            "سما حساب - خطا", MessageBoxButton.OK, MessageBoxImage.Error);
     }
 
     public static T GetService<T>() where T : notnull =>

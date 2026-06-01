@@ -21,4 +21,10 @@ public partial class LoginWindow : Window
 
     private void CloseButton_Click(object sender, RoutedEventArgs e) =>
         System.Windows.Application.Current.Shutdown();
+
+    private void ConnectionSettings_Click(object sender, RoutedEventArgs e)
+    {
+        var dlg = new ConnectionSettingsWindow { Owner = this };
+        dlg.ShowDialog();
+    }
 }

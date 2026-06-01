@@ -26,14 +26,8 @@
     <ComponentGroup Id="AppFiles" Directory="INSTALLFOLDER">
       <Component Id="MainExe" Guid="C1A2B3C4-D5E6-4F70-8192-A3B4C5D6E7F8">
         <File Id="SamaHesabExe"
-              Source="..\build\app\SamaHesab.WPF.exe"
+              Source="..\build\SamaHesab.exe"
               Name="SamaHesab.exe"
-              KeyPath="yes" />
-      </Component>
-      <Component Id="AppConfig" Guid="D2B3C4D5-E6F7-4081-92A3-B4C5D6E7F809">
-        <File Id="AppSettings"
-              Source="..\build\app\appsettings.json"
-              Name="appsettings.json"
               KeyPath="yes" />
       </Component>
     </ComponentGroup>

@@ -9,7 +9,7 @@
     <Color x:Key="PrimaryAccentColor">#2563EB</Color>
     <Color x:Key="PrimaryAccentHoverColor">#1D4ED8</Color>
     <Color x:Key="SecondaryAccentColor">#7C3AED</Color>
-    <Color x:Key="SuccessColor">#059669</Color>
+    <Color x:Key="SuccessColorVal">#059669</Color>
     <Color x:Key="WarningColorVal">#D97706</Color>
     <Color x:Key="DangerColorVal">#DC2626</Color>
     <Color x:Key="InfoColor">#0891B2</Color>
@@ -56,7 +56,7 @@
     <SolidColorBrush x:Key="SidebarActiveText"     Color="{StaticResource SidebarActiveTextColor}"/>
     <SolidColorBrush x:Key="SidebarActiveBg"       Color="{StaticResource SidebarActiveBgColor}"/>
     <SolidColorBrush x:Key="PrimaryAccent"         Color="{StaticResource PrimaryAccentColor}"/>
-    <SolidColorBrush x:Key="SuccessColor"          Color="{StaticResource SuccessColor}"/>
+    <SolidColorBrush x:Key="SuccessColor"          Color="{StaticResource SuccessColorVal}"/>
     <SolidColorBrush x:Key="WarningColor"          Color="{StaticResource WarningColorVal}"/>
     <SolidColorBrush x:Key="DangerColor"           Color="{StaticResource DangerColorVal}"/>
 
