@@ -18,7 +18,7 @@ CREATE DATABASE SamaHesab
 ON PRIMARY
 (
     NAME = N'SamaHesab',
-    FILENAME = N'C:\Program Files\Microsoft SQL Server\MSSQL16.MSSQLSERVER\MSSQL\DATA\SamaHesab.mdf',
+    FILENAME = N'/var/opt/mssql/data/SamaHesab.mdf',
     SIZE = 512MB,
     MAXSIZE = UNLIMITED,
     FILEGROWTH = 256MB
@@ -26,7 +26,7 @@ ON PRIMARY
 LOG ON
 (
     NAME = N'SamaHesab_log',
-    FILENAME = N'C:\Program Files\Microsoft SQL Server\MSSQL16.MSSQLSERVER\MSSQL\DATA\SamaHesab_log.ldf',
+    FILENAME = N'/var/opt/mssql/data/SamaHesab_log.ldf',
     SIZE = 128MB,
     MAXSIZE = 2048MB,
     FILEGROWTH = 64MB
