@@ -1,0 +1,132 @@
+﻿using System.Linq.Expressions;
+using Microsoft.EntityFrameworkCore;
+using SamaHesab.Domain.Entities.Accounting;
+using SamaHesab.Domain.Entities.Inventory;
+using SamaHesab.Domain.Interfaces.Repositories;
+
+namespace SamaHesab.Infrastructure.Repositories;
+
+// Accounting Repositories
+public class VoucherRepository : GenericRepository<Voucher>, IVoucherRepository
+{
+    public VoucherRepository(ApplicationDbContext context) : base(context) { }
+
+    public async Task<List<Voucher>> GetByDateRangeAsync(
+        int companyId, int fiscalYearId, string fromDate, string toDate, CancellationToken ct = default)
+    {
+        return await DbSet
+            .Where(v => v.CompanyId == companyId && v.FiscalYearId == fiscalYearId
+                && v.VoucherDate >= fromDate && v.VoucherDate <= toDate)
+            .ToListAsync(ct);
+    }
+
+    public async Task<Voucher?> GetWithItemsAsync(int voucherId, CancellationToken ct = default)
+    {
+        return await DbSet.Include(v => v.Items)
+            .FirstOrDefaultAsync(v => v.Id == voucherId, ct);
+    }
+
+    public Task<string> GetNextNumberAsync(int companyId, CancellationToken ct = default)
+    {
+        // Simplified - in real implementation call the SP
+        return Task.FromResult($"V{DateTime.Now.Ticks}");
+    }
+}
+
+public class AccountRepository : GenericRepository<Account>, IAccountRepository
+{
+    public AccountRepository(ApplicationDbContext context) : base(context) { }
+
+    public async Task<List<Account>> GetByCompanyAsync(int companyId, CancellationToken ct = default)
+        => await DbSet.Where(a => a.CompanyId == companyId).ToListAsync(ct);
+
+    public async Task<Account?> GetByCodeAsync(int companyId, string code, CancellationToken ct = default)
+        => await DbSet.FirstOrDefaultAsync(a => a.CompanyId == companyId && a.Code == code, ct);
+
+    public async Task<List<Account>> GetChildrenAsync(int parentId, CancellationToken ct = default)
+        => await DbSet.Where(a => a.ParentId == parentId).ToListAsync(ct);
+
+    public async Task<List<Account>> GetLeafAccountsAsync(int companyId, CancellationToken ct = default)
+        => await DbSet.Where(a => a.CompanyId == companyId && a.IsLeaf).ToListAsync(ct);
+
+    public async Task<bool> HasTransactionsAsync(int accountId, CancellationToken ct = default)
+        => await DbSet.Where(a => a.Id == accountId)
+            .SelectMany(a => a.VoucherItems)
+            .AnyAsync(ct);
+
+    public async Task<decimal> GetBalanceAsync(int accountId, CancellationToken ct = default)
+    {
+        var account = await DbSet.FirstOrDefaultAsync(a => a.Id == accountId, ct);
+        if (account == null) return 0;
+        // Simplified calculation
+        return 0; // In real impl: query voucher items
+    }
+}
+
+public class ChequeRepository : GenericRepository<Cheque>, IChequeRepository
+{
+    public ChequeRepository(ApplicationDbContext context) : base(context) { }
+
+    public async Task<List<Cheque>> GetByStatusAsync(
+        int companyId, ChequeStatus status, CancellationToken ct = default)
+        => await DbSet.Where(c => c.CompanyId == companyId && c.Status == status).ToListAsync(ct);
+
+    public async Task<List<Cheque>> GetDueTodayAsync(int companyId, CancellationToken ct = default)
+        => await DbSet.Where(c => c.CompanyId == companyId && c.DueDate <= DateTime.Today).ToListAsync(ct);
+
+    public async Task<List<Cheque>> GetOverdueAsync(int companyId, CancellationToken ct = default)
+        => await DbSet.Where(c => c.CompanyId == companyId && c.DueDate < DateTime.Today).ToListAsync(ct);
+}
+
+// Inventory Repositories
+public class ProductRepository : GenericRepository<Product>, IProductRepository
+{
+    public ProductRepository(ApplicationDbContext context) : base(context) { }
+
+    public async Task<Product?> GetByCodeAsync(int companyId, string code, CancellationToken ct = default)
+        => await DbSet.FirstOrDefaultAsync(p => p.CompanyId == companyId && p.Code == code, ct);
+
+    public async Task<Product?> GetByBarcodeAsync(int companyId, string barcode, CancellationToken ct = default)
+        => await DbSet.FirstOrDefaultAsync(p => p.CompanyId == companyId && p.Barcode == barcode, ct);
+
+    public async Task<List<Product>> SearchAsync(int companyId, string searchText, CancellationToken ct = default)
+        => await DbSet.Where(p => p.CompanyId == companyId &&
+            (p.Code.Contains(searchText) || p.Name.Contains(searchText)))
+            .ToListAsync(ct);
+
+    public async Task<List<Product>> GetByGroupAsync(int groupId, CancellationToken ct = default)
+        => await DbSet.Where(p => p.GroupId == groupId).ToListAsync(ct);
+
+    public async Task<List<Product>> GetLowStockAsync(int companyId, CancellationToken ct = default)
+        => await DbSet.Where(p => p.CompanyId == companyId && p.IsActive).ToListAsync(ct);
+}
+
+public class WarehouseRepository : GenericRepository<Warehouse>, IWarehouseRepository
+{
+    public WarehouseRepository(ApplicationDbContext context) : base(context) { }
+
+    public async Task<List<Warehouse>> GetByCompanyAsync(int companyId, CancellationToken ct = default)
+        => await DbSet.Where(w => w.CompanyId == companyId).ToListAsync(ct);
+
+    public async Task<Warehouse?> GetDefaultAsync(int companyId, CancellationToken ct = default)
+        => await DbSet.FirstOrDefaultAsync(w => w.CompanyId == companyId && w.IsDefault, ct);
+}
+
+public class StockItemRepository : GenericRepository<StockItem>, IStockItemRepository
+{
+    public StockItemRepository(ApplicationDbContext context) : base(context) { }
+
+    public async Task<StockItem?> GetByProductAndWarehouseAsync(
+        int productId, int warehouseId, CancellationToken ct = default)
+        => await DbSet.FirstOrDefaultAsync(
+            s => s.ProductId == productId && s.WarehouseId == warehouseId, ct);
+
+    public async Task<List<StockItem>> GetByProductAsync(int productId, CancellationToken ct = default)
+        => await DbSet.Where(s => s.ProductId == productId).ToListAsync(ct);
+
+    public async Task<List<StockItem>> GetByWarehouseAsync(int warehouseId, CancellationToken ct = default)
+        => await DbSet.Where(s => s.WarehouseId == warehouseId).ToListAsync(ct);
+
+    public async Task<decimal> GetTotalQuantityAsync(int productId, CancellationToken ct = default)
+        => await DbSet.Where(s => s.ProductId == productId).SumAsync(s => s.Quantity, ct);
+}

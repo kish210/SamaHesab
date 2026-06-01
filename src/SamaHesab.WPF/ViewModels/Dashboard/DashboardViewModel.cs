@@ -1,0 +1,116 @@
+﻿using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
+using SamaHesab.Application.Common.Interfaces;
+using SamaHesab.Domain.Interfaces.Repositories;
+using SamaHesab.WPF.Services;
+using SamaHesab.WPF.ViewModels.Shell;
+using System.Collections.ObjectModel;
+
+namespace SamaHesab.WPF.ViewModels.Dashboard;
+
+public partial class DashboardViewModel : BaseViewModel
+{
+    private readonly ICurrentUserService _currentUser;
+    private readonly IPersianCalendarService _calendar;
+    private readonly IStockItemRepository _stockRepo;
+    private readonly IChequeRepository _chequeRepo;
+
+    // KPI Cards
+    [ObservableProperty] private decimal _todaySales;
+    [ObservableProperty] private decimal _monthSales;
+    [ObservableProperty] private decimal _todayPurchase;
+    [ObservableProperty] private decimal _monthPurchase;
+    [ObservableProperty] private int _totalCustomers;
+    [ObservableProperty] private int _totalProducts;
+    [ObservableProperty] private int _lowStockCount;
+    [ObservableProperty] private int _overdueCheques;
+    [ObservableProperty] private decimal _cashBalance;
+    [ObservableProperty] private decimal _receivable;
+    [ObservableProperty] private decimal _payable;
+    [ObservableProperty] private decimal _netProfit;
+
+    // Lists
+    public ObservableCollection<DashboardAlert> Alerts { get; } = new();
+    public ObservableCollection<RecentInvoice> RecentInvoices { get; } = new();
+    public ObservableCollection<TopProduct> TopProducts { get; } = new();
+    public ObservableCollection<ChequeDueItem> ChequesDue { get; } = new();
+    public ObservableCollection<MonthlySalesPoint> SalesChart { get; } = new();
+
+    public DashboardViewModel(ICurrentUserService currentUser, IPersianCalendarService calendar,
+        IStockItemRepository stockRepo, IChequeRepository chequeRepo,
+        IDialogService dialogService, INavigationService navigationService)
+        : base(dialogService, navigationService)
+    {
+        _currentUser = currentUser; _calendar = calendar;
+        _stockRepo = stockRepo; _chequeRepo = chequeRepo;
+    }
+
+    public override async Task LoadAsync()
+    {
+        await ExecuteAsync(async () =>
+        {
+            var companyId = _currentUser.CompanyId ?? 0;
+            var today = _calendar.GetCurrentPersianDate();
+
+            // KPIs (sample data – in production query from DB)
+            TodaySales    = 12_500_000;
+            MonthSales    = 385_000_000;
+            TodayPurchase = 8_700_000;
+            MonthPurchase = 145_000_000;
+            TotalCustomers = 248;
+            TotalProducts  = 1_340;
+            LowStockCount  = 12;
+            OverdueCheques = 3;
+            CashBalance    = 45_000_000;
+            Receivable     = 120_000_000;
+            Payable        = 67_000_000;
+            NetProfit      = MonthSales - MonthPurchase - 30_000_000;
+
+            // Alerts
+            Alerts.Clear();
+            if (LowStockCount > 0)
+                Alerts.Add(new DashboardAlert("⚠", $"{LowStockCount} کالا به حداقل موجودی رسیده‌اند.", "warning", "Products"));
+            if (OverdueCheques > 0)
+                Alerts.Add(new DashboardAlert("🔴", $"{OverdueCheques} چک سررسید گذشته دارید.", "danger", "Cheques"));
+            Alerts.Add(new DashboardAlert("ℹ", "پشتیبان‌گیری اخیر: دیروز ساعت ۲۳:۰۰", "info", "Backup"));
+
+            // Recent Invoices
+            RecentInvoices.Clear();
+            RecentInvoices.Add(new RecentInvoice("F000234", today, "علی احمدی", 8_500_000, "قطعی"));
+            RecentInvoices.Add(new RecentInvoice("F000233", today, "شرکت آلفا", 45_200_000, "قطعی"));
+            RecentInvoices.Add(new RecentInvoice("F000232", today, "محمد رضایی", 2_100_000, "پیش‌نویس"));
+
+            // Top Products
+            TopProducts.Clear();
+            TopProducts.Add(new TopProduct("روغن موتور ۵L", 320, 85_000_000));
+            TopProducts.Add(new TopProduct("لاستیک ۱۷۵/۷۰R13", 180, 126_000_000));
+            TopProducts.Add(new TopProduct("فیلتر هوا", 450, 22_500_000));
+
+            // Sales Chart (last 6 months)
+            SalesChart.Clear();
+            var months = new[] { "مهر", "آبان", "آذر", "دی", "بهمن", "اسفند" };
+            var vals   = new[] { 280m, 310m, 295m, 340m, 360m, 385m };
+            for (int i = 0; i < months.Length; i++)
+                SalesChart.Add(new MonthlySalesPoint(months[i], vals[i] * 1_000_000));
+
+            // Cheques due
+            ChequesDue.Clear();
+            ChequesDue.Add(new ChequeDueItem("CH-1234", "بانک ملت", 15_000_000, today, "دریافتی"));
+            ChequesDue.Add(new ChequeDueItem("CH-1235", "بانک صادرات", 8_000_000, today, "پرداختی"));
+
+            await Task.CompletedTask;
+        }, "در حال بارگذاری داشبورد...");
+    }
+
+    [RelayCommand]
+    private void NavigateTo(string page) => _navigationService.NavigateTo(page);
+
+    [RelayCommand]
+    private async Task RefreshAsync() => await LoadAsync();
+}
+
+public record DashboardAlert(string Icon, string Message, string Type, string ActionPage);
+public record RecentInvoice(string Number, string Date, string CustomerName, decimal Amount, string Status);
+public record TopProduct(string Name, int QtySold, decimal Revenue);
+public record ChequeDueItem(string ChequeNumber, string BankName, decimal Amount, string DueDate, string Type);
+public record MonthlySalesPoint(string Month, decimal Amount);

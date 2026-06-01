@@ -1,0 +1,33 @@
+<UserControl x:Class="SamaHesab.WPF.Controls.PersianDatePicker"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             FlowDirection="RightToLeft">
+
+    <Border Background="{DynamicResource InputBackground}"
+            BorderBrush="{DynamicResource InputBorder}"
+            BorderThickness="1" CornerRadius="4">
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="36"/>
+            </Grid.ColumnDefinitions>
+
+            <TextBox Grid.Column="0"
+                     Text="{Binding PersianDate, RelativeSource={RelativeSource AncestorType=UserControl},
+                         UpdateSourceTrigger=PropertyChanged}"
+                     Background="Transparent"
+                     BorderThickness="0"
+                     Foreground="{DynamicResource PrimaryText}"
+                     Padding="10,8"
+                     FontFamily="{StaticResource VazirFont}"
+                     VerticalAlignment="Center"/>
+
+            <Button Grid.Column="1" Content="📅"
+                    Background="Transparent"
+                    BorderThickness="0"
+                    Foreground="{DynamicResource SecondaryText}"
+                    FontSize="14"
+                    Click="CalendarButton_Click"/>
+        </Grid>
+    </Border>
+</UserControl>

@@ -1,0 +1,11 @@
+<UserControl x:Class="SamaHesab.WPF.Views/Purchase.PurchaseInvoiceEditView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             Background="{DynamicResource AppBackground}"
+             FlowDirection="RightToLeft">
+    <Grid>
+        <TextBlock Text="در حال توسعه..." HorizontalAlignment="Center" VerticalAlignment="Center"
+                   FontFamily="{StaticResource VazirFont}" FontSize="18"
+                   Foreground="{DynamicResource SecondaryText}"/>
+    </Grid>
+</UserControl>

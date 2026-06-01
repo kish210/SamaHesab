@@ -1,0 +1,174 @@
+﻿<UserControl x:Class="SamaHesab.WPF.Views.Inventory.ProductEditView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             Background="{DynamicResource AppBackground}"
+             FlowDirection="RightToLeft">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <!-- Toolbar -->
+        <Border Grid.Row="0" Background="{DynamicResource RibbonBackground}"
+                BorderBrush="{DynamicResource BorderColor}" BorderThickness="0,0,0,1" Padding="12,8">
+            <StackPanel Orientation="Horizontal">
+                <Button Content="💾 ذخیره" Style="{StaticResource PrimaryButton}"   Height="36" Margin="0,0,6,0" Command="{Binding SaveCommand}"/>
+                <Button Content="❌ انصراف" Style="{StaticResource SecondaryButton}" Height="36" Command="{Binding CancelCommand}"/>
+            </StackPanel>
+        </Border>
+
+        <!-- Form -->
+        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
+            <Grid Margin="20">
+                <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="16"/><ColumnDefinition Width="300"/></Grid.ColumnDefinitions>
+
+                <!-- Main Fields -->
+                <StackPanel Grid.Column="0">
+                    <!-- Basic Info -->
+                    <Border Style="{StaticResource Card}" Margin="0,0,0,16">
+                        <StackPanel>
+                            <TextBlock Text="اطلاعات پایه کالا" FontWeight="Bold" FontSize="14"
+                                       Foreground="{DynamicResource PrimaryText}"
+                                       FontFamily="{StaticResource VazirFont}" Margin="0,0,0,16"/>
+                            <Grid>
+                                <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="16"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
+                                <StackPanel Grid.Column="0">
+                                    <TextBlock Style="{StaticResource FormLabel}" Text="کد کالا *"/>
+                                    <Border Background="{DynamicResource InputBackground}" BorderBrush="{DynamicResource InputBorder}" BorderThickness="1" CornerRadius="4">
+                                        <TextBox Text="{Binding Code}" Background="Transparent" BorderThickness="0" Foreground="{DynamicResource PrimaryText}" Padding="10,8" FontFamily="{StaticResource VazirFont}"/>
+                                    </Border>
+                                </StackPanel>
+                                <StackPanel Grid.Column="2">
+                                    <TextBlock Style="{StaticResource FormLabel}" Text="بارکد"/>
+                                    <Border Background="{DynamicResource InputBackground}" BorderBrush="{DynamicResource InputBorder}" BorderThickness="1" CornerRadius="4">
+                                        <TextBox Text="{Binding Barcode}" Background="Transparent" BorderThickness="0" Foreground="{DynamicResource PrimaryText}" Padding="10,8" FontFamily="{StaticResource VazirFont}" FlowDirection="LeftToRight" TextAlignment="Right"/>
+                                    </Border>
+                                </StackPanel>
+                            </Grid>
+                            <StackPanel Margin="0,12,0,0">
+                                <TextBlock Style="{StaticResource FormLabel}" Text="نام کالا *"/>
+                                <Border Background="{DynamicResource InputBackground}" BorderBrush="{DynamicResource InputBorder}" BorderThickness="1" CornerRadius="4">
+                                    <TextBox Text="{Binding Name}" Background="Transparent" BorderThickness="0" Foreground="{DynamicResource PrimaryText}" Padding="10,8" FontFamily="{StaticResource VazirFont}"/>
+                                </Border>
+                            </StackPanel>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- Prices -->
+                    <Border Style="{StaticResource Card}" Margin="0,0,0,16">
+                        <StackPanel>
+                            <TextBlock Text="💰 قیمت‌گذاری" FontWeight="Bold" FontSize="14"
+                                       Foreground="{DynamicResource PrimaryText}"
+                                       FontFamily="{StaticResource VazirFont}" Margin="0,0,0,16"/>
+                            <UniformGrid Rows="2" Columns="2" >
+                                <StackPanel Margin="0,0,8,8">
+                                    <TextBlock Style="{StaticResource FormLabel}" Text="قیمت خرید (ریال)"/>
+                                    <Border Background="{DynamicResource InputBackground}" BorderBrush="{DynamicResource InputBorder}" BorderThickness="1" CornerRadius="4">
+                                        <TextBox Text="{Binding PurchasePrice, StringFormat='{}{0:N0}'}" Background="Transparent" BorderThickness="0" Foreground="#2563EB" Padding="10,8" FontFamily="{StaticResource VazirFont}" FontWeight="Bold"/>
+                                    </Border>
+                                </StackPanel>
+                                <StackPanel Margin="0,0,0,8">
+                                    <TextBlock Style="{StaticResource FormLabel}" Text="قیمت فروش خرده (ریال)"/>
+                                    <Border Background="{DynamicResource InputBackground}" BorderBrush="{DynamicResource InputBorder}" BorderThickness="1" CornerRadius="4">
+                                        <TextBox Text="{Binding SalePrice, StringFormat='{}{0:N0}'}" Background="Transparent" BorderThickness="0" Foreground="#059669" Padding="10,8" FontFamily="{StaticResource VazirFont}" FontWeight="Bold"/>
+                                    </Border>
+                                </StackPanel>
+                                <StackPanel Margin="0,0,8,0">
+                                    <TextBlock Style="{StaticResource FormLabel}" Text="قیمت فروش عمده (ریال)"/>
+                                    <Border Background="{DynamicResource InputBackground}" BorderBrush="{DynamicResource InputBorder}" BorderThickness="1" CornerRadius="4">
+                                        <TextBox Text="{Binding WholesalePrice, StringFormat='{}{0:N0}'}" Background="Transparent" BorderThickness="0" Foreground="{DynamicResource PrimaryText}" Padding="10,8" FontFamily="{StaticResource VazirFont}"/>
+                                    </Border>
+                                </StackPanel>
+                                <StackPanel>
+                                    <TextBlock Style="{StaticResource FormLabel}" Text="نرخ مالیات (%)"/>
+                                    <Border Background="{DynamicResource InputBackground}" BorderBrush="{DynamicResource InputBorder}" BorderThickness="1" CornerRadius="4">
+                                        <TextBox Text="{Binding TaxRate}" Background="Transparent" BorderThickness="0" Foreground="{DynamicResource PrimaryText}" Padding="10,8" FontFamily="{StaticResource VazirFont}"/>
+                                    </Border>
+                                </StackPanel>
+                            </UniformGrid>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- Stock & Tracking -->
+                    <Border Style="{StaticResource Card}">
+                        <StackPanel>
+                            <TextBlock Text="📦 موجودی و ردیابی" FontWeight="Bold" FontSize="14"
+                                       Foreground="{DynamicResource PrimaryText}"
+                                       FontFamily="{StaticResource VazirFont}" Margin="0,0,0,16"/>
+                            <Grid>
+                                <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="16"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
+                                <StackPanel Grid.Column="0">
+                                    <TextBlock Style="{StaticResource FormLabel}" Text="حداقل موجودی"/>
+                                    <Border Background="{DynamicResource InputBackground}" BorderBrush="{DynamicResource InputBorder}" BorderThickness="1" CornerRadius="4">
+                                        <TextBox Text="{Binding MinStock}" Background="Transparent" BorderThickness="0" Foreground="{DynamicResource PrimaryText}" Padding="10,8" FontFamily="{StaticResource VazirFont}"/>
+                                    </Border>
+                                </StackPanel>
+                                <StackPanel Grid.Column="2">
+                                    <TextBlock Style="{StaticResource FormLabel}" Text="روش ارزیابی"/>
+                                    <ComboBox ItemsSource="{Binding ValuationMethods}" SelectedItem="{Binding ValuationMethod}" Height="36">
+                                        <ComboBox.Style><Style TargetType="ComboBox" BasedOn="{StaticResource BaseComboBox}"/></ComboBox.Style>
+                                    </ComboBox>
+                                </StackPanel>
+                            </Grid>
+                            <StackPanel Orientation="Horizontal" Margin="0,16,0,0">
+                                <CheckBox Content="ردیابی سریال"  IsChecked="{Binding HasSerial}"  Margin="0,0,24,0" Foreground="{DynamicResource PrimaryText}" FontFamily="{StaticResource VazirFont}"/>
+                                <CheckBox Content="ردیابی بچ"     IsChecked="{Binding HasBatch}"   Margin="0,0,24,0" Foreground="{DynamicResource PrimaryText}" FontFamily="{StaticResource VazirFont}"/>
+                                <CheckBox Content="تاریخ انقضا"   IsChecked="{Binding HasExpiry}"  Foreground="{DynamicResource PrimaryText}" FontFamily="{StaticResource VazirFont}"/>
+                            </StackPanel>
+                        </StackPanel>
+                    </Border>
+                </StackPanel>
+
+                <!-- Right: Image + Summary -->
+                <StackPanel Grid.Column="2">
+                    <Border Style="{StaticResource Card}" Margin="0,0,0,16">
+                        <StackPanel>
+                            <TextBlock Text="تصویر کالا" FontWeight="Bold" FontSize="14"
+                                       Foreground="{DynamicResource PrimaryText}"
+                                       FontFamily="{StaticResource VazirFont}" Margin="0,0,0,12"/>
+                            <Border Background="{DynamicResource InputBackground}" CornerRadius="8"
+                                    Height="180" HorizontalAlignment="Stretch">
+                                <TextBlock Text="📷 کلیک کنید" HorizontalAlignment="Center"
+                                           VerticalAlignment="Center" Foreground="{DynamicResource SecondaryText}"
+                                           FontFamily="{StaticResource VazirFont}"/>
+                            </Border>
+                            <Button Content="انتخاب تصویر" Style="{StaticResource SecondaryButton}"
+                                    Height="34" Margin="0,8,0,0"/>
+                        </StackPanel>
+                    </Border>
+
+                    <Border Style="{StaticResource Card}">
+                        <StackPanel>
+                            <TextBlock Text="خلاصه موجودی" FontWeight="Bold" FontSize="14"
+                                       Foreground="{DynamicResource PrimaryText}"
+                                       FontFamily="{StaticResource VazirFont}" Margin="0,0,0,12"/>
+                            <Border Background="{DynamicResource SurfaceBackground}" CornerRadius="8" Padding="12">
+                                <StackPanel>
+                                    <Grid Margin="0,0,0,6">
+                                        <TextBlock Text="موجودی کل:" Foreground="{DynamicResource SecondaryText}" FontFamily="{StaticResource VazirFont}" FontSize="12"/>
+                                        <TextBlock Text="۱۲۰ عدد" HorizontalAlignment="Left" Foreground="#059669" FontWeight="Bold" FontFamily="{StaticResource VazirFont}"/>
+                                    </Grid>
+                                    <Grid>
+                                        <TextBlock Text="میانگین بهای تمام شده:" Foreground="{DynamicResource SecondaryText}" FontFamily="{StaticResource VazirFont}" FontSize="12"/>
+                                        <TextBlock Text="۱,۲۵۰,۰۰۰ ریال" HorizontalAlignment="Left" Foreground="{DynamicResource WarningColor}" FontFamily="{StaticResource VazirFont}"/>
+                                    </Grid>
+                                </StackPanel>
+                            </Border>
+                        </StackPanel>
+                    </Border>
+                </StackPanel>
+            </Grid>
+        </ScrollViewer>
+
+        <!-- Footer -->
+        <Border Grid.Row="2" Background="{DynamicResource SurfaceBackground}"
+                BorderBrush="{DynamicResource BorderColor}" BorderThickness="0,1,0,0" Padding="16,8">
+            <StackPanel Orientation="Horizontal">
+                <Button Content="💾 ذخیره کالا" Style="{StaticResource PrimaryButton}" Height="38" Margin="0,0,8,0" Command="{Binding SaveCommand}"/>
+                <Button Content="❌ انصراف" Style="{StaticResource SecondaryButton}" Height="38" Command="{Binding CancelCommand}"/>
+            </StackPanel>
+        </Border>
+    </Grid>
+</UserControl>

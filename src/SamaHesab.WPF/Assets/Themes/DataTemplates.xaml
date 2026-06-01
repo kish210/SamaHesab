@@ -1,0 +1,73 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:dash="clr-namespace:SamaHesab.WPF.ViewModels.Dashboard"
+                    xmlns:acc="clr-namespace:SamaHesab.WPF.ViewModels.Accounting"
+                    xmlns:inv="clr-namespace:SamaHesab.WPF.ViewModels.Inventory"
+                    xmlns:sal="clr-namespace:SamaHesab.WPF.ViewModels.Sales"
+                    xmlns:pos="clr-namespace:SamaHesab.WPF.ViewModels.POS"
+                    xmlns:crm="clr-namespace:SamaHesab.WPF.ViewModels.CRM"
+                    xmlns:hrm="clr-namespace:SamaHesab.WPF.ViewModels.HRM"
+                    xmlns:rep="clr-namespace:SamaHesab.WPF.ViewModels.Reports"
+                    xmlns:cfg="clr-namespace:SamaHesab.WPF.ViewModels.Settings"
+                    xmlns:vd="clr-namespace:SamaHesab.WPF.Views.Dashboard"
+                    xmlns:va="clr-namespace:SamaHesab.WPF.Views.Accounting"
+                    xmlns:vi="clr-namespace:SamaHesab.WPF.Views.Inventory"
+                    xmlns:vsal="clr-namespace:SamaHesab.WPF.Views.Sales"
+                    xmlns:vpos="clr-namespace:SamaHesab.WPF.Views.POS"
+                    xmlns:vcrm="clr-namespace:SamaHesab.WPF.Views.CRM"
+                    xmlns:vhrm="clr-namespace:SamaHesab.WPF.Views.HRM"
+                    xmlns:vrep="clr-namespace:SamaHesab.WPF.Views.Reports"
+                    xmlns:vcfg="clr-namespace:SamaHesab.WPF.Views.Settings">
+
+    <!-- Dashboard -->
+    <DataTemplate DataType="{x:Type dash:DashboardViewModel}">
+        <vd:DashboardView/>
+    </DataTemplate>
+
+    <!-- Accounting -->
+    <DataTemplate DataType="{x:Type acc:VoucherEditViewModel}">
+        <va:VoucherEditView/>
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type acc:ChartOfAccountsViewModel}">
+        <va:ChartOfAccountsView/>
+    </DataTemplate>
+
+    <!-- Inventory -->
+    <DataTemplate DataType="{x:Type inv:ProductEditViewModel}">
+        <vi:ProductEditView/>
+    </DataTemplate>
+
+    <!-- Sales -->
+    <DataTemplate DataType="{x:Type sal:SalesInvoiceEditViewModel}">
+        <vsal:SalesInvoiceEditView/>
+    </DataTemplate>
+
+    <!-- POS -->
+    <DataTemplate DataType="{x:Type pos:PosViewModel}">
+        <vpos:PosView/>
+    </DataTemplate>
+
+    <!-- CRM -->
+    <DataTemplate DataType="{x:Type crm:CustomerEditViewModel}">
+        <vcrm:CustomerEditView/>
+    </DataTemplate>
+
+    <!-- HRM -->
+    <DataTemplate DataType="{x:Type hrm:SalaryViewModel}">
+        <vhrm:SalaryView/>
+    </DataTemplate>
+
+    <!-- Reports -->
+    <DataTemplate DataType="{x:Type rep:ReportsViewModel}">
+        <vrep:ReportsView/>
+    </DataTemplate>
+
+    <!-- Settings -->
+    <DataTemplate DataType="{x:Type cfg:SettingsViewModel}">
+        <vcfg:SettingsView/>
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type cfg:BackupViewModel}">
+        <vcfg:BackupView/>
+    </DataTemplate>
+
+</ResourceDictionary>

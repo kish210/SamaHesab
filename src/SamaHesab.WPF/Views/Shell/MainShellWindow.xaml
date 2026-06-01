@@ -1,0 +1,291 @@
+<Window x:Class="SamaHesab.WPF.Views.Shell.MainShellWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:shell="clr-namespace:SamaHesab.WPF.ViewModels.Shell"
+        Title="سما حساب"
+        WindowState="Maximized"
+        MinWidth="1200" MinHeight="700"
+        Background="{DynamicResource AppBackground}"
+        FlowDirection="RightToLeft"
+        KeyDown="Window_KeyDown">
+
+    <Window.Resources>
+        <BooleanToVisibilityConverter x:Key="BoolToVis"/>
+
+        <!-- Sidebar Menu Item Style -->
+        <Style x:Key="SidebarMenuItem" TargetType="Button">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Foreground" Value="{DynamicResource SidebarText}"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Padding" Value="16,10"/>
+            <Setter Property="HorizontalContentAlignment" Value="Left"/>
+            <Setter Property="FontFamily" Value="{StaticResource VazirFont}"/>
+            <Setter Property="FontSize" Value="13"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Height" Value="44"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="Border" Background="{TemplateBinding Background}"
+                                CornerRadius="8" Margin="6,2" Padding="{TemplateBinding Padding}">
+                            <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                              VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="Border" Property="Background" Value="{DynamicResource SidebarHoverBg}"/>
+                                <Setter Property="Foreground" Value="{DynamicResource SidebarActiveText}"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- Active Sidebar Menu Item -->
+        <Style x:Key="ActiveSidebarMenuItem" TargetType="Button" BasedOn="{StaticResource SidebarMenuItem}">
+            <Setter Property="Background" Value="{DynamicResource SidebarActiveBg}"/>
+            <Setter Property="Foreground" Value="{DynamicResource SidebarActiveText}"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+        </Style>
+
+        <!-- Sidebar Section Header -->
+        <Style x:Key="SidebarSectionHeader" TargetType="TextBlock">
+            <Setter Property="Foreground" Value="#4A5580"/>
+            <Setter Property="FontFamily" Value="{StaticResource VazirFont}"/>
+            <Setter Property="FontSize" Value="10"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Margin" Value="22,12,0,4"/>
+            <Setter Property="TextTransform" Value="Uppercase"/>
+        </Style>
+    </Window.Resources>
+
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition x:Name="SidebarColumn" Width="230"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <!-- =============================================
+             SIDEBAR
+             ============================================= -->
+        <Border Grid.Column="0" Background="{DynamicResource SidebarBackground}">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+
+                <!-- Logo & Company -->
+                <Border Grid.Row="0" Padding="16,20">
+                    <StackPanel>
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                            <Border Width="42" Height="42" CornerRadius="12" Margin="0,0,10,0">
+                                <Border.Background>
+                                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                                        <GradientStop Color="#4B7BEC" Offset="0"/>
+                                        <GradientStop Color="#2ECC71" Offset="1"/>
+                                    </LinearGradientBrush>
+                                </Border.Background>
+                                <TextBlock Text="س" FontSize="22" FontWeight="Bold"
+                                           Foreground="White" HorizontalAlignment="Center"
+                                           VerticalAlignment="Center"
+                                           FontFamily="{StaticResource VazirFont}"/>
+                            </Border>
+                            <StackPanel VerticalAlignment="Center">
+                                <TextBlock Text="سما حساب" FontSize="16" FontWeight="Bold"
+                                           Foreground="White"
+                                           FontFamily="{StaticResource VazirFont}"/>
+                                <TextBlock Text="{Binding CompanyName}" FontSize="11"
+                                           Foreground="#6878A8"
+                                           FontFamily="{StaticResource VazirFont}"/>
+                            </StackPanel>
+                        </StackPanel>
+
+                        <!-- Separator -->
+                        <Border Height="1" Background="#252B45" Margin="0,16,0,0"/>
+                    </StackPanel>
+                </Border>
+
+                <!-- Navigation Menu -->
+                <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
+                    <StackPanel>
+
+                        <!-- Main -->
+                        <TextBlock Text="اصلی" Style="{StaticResource SidebarSectionHeader}"/>
+
+                        <Button Content="📊  داشبورد" Style="{StaticResource SidebarMenuItem}"
+                                Command="{Binding NavigateToCommand}" CommandParameter="Dashboard"/>
+
+                        <!-- حسابداری -->
+                        <TextBlock Text="حسابداری" Style="{StaticResource SidebarSectionHeader}"/>
+
+                        <Button Content="📋  اسناد حسابداری" Style="{StaticResource SidebarMenuItem}"
+                                Command="{Binding NavigateToCommand}" CommandParameter="Vouchers"/>
+                        <Button Content="🏛  دفتر حساب‌ها" Style="{StaticResource SidebarMenuItem}"
+                                Command="{Binding NavigateToCommand}" CommandParameter="Accounts"/>
+                        <Button Content="🏦  بانک و صندوق" Style="{StaticResource SidebarMenuItem}"
+                                Command="{Binding NavigateToCommand}" CommandParameter="BankAccounts"/>
+                        <Button Content="📝  مدیریت چک" Style="{StaticResource SidebarMenuItem}"
+                                Command="{Binding NavigateToCommand}" CommandParameter="Cheques"/>
+
+                        <!-- انبارداری -->
+                        <TextBlock Text="انبارداری" Style="{StaticResource SidebarSectionHeader}"/>
+
+                        <Button Content="📦  مدیریت کالا" Style="{StaticResource SidebarMenuItem}"
+                                Command="{Binding NavigateToCommand}" CommandParameter="Products"/>
+                        <Button Content="🏭  انبارها" Style="{StaticResource SidebarMenuItem}"
+                                Command="{Binding NavigateToCommand}" CommandParameter="Warehouses"/>
+
+                        <!-- فروش -->
+                        <TextBlock Text="فروش" Style="{StaticResource SidebarSectionHeader}"/>
+
+                        <Button Content="🧾  فاکتور فروش" Style="{StaticResource SidebarMenuItem}"
+                                Command="{Binding NavigateToCommand}" CommandParameter="SalesInvoices"/>
+                        <Button Content="🖨  صندوق (POS)" Style="{StaticResource SidebarMenuItem}"
+                                Command="{Binding NavigateToCommand}" CommandParameter="POS"/>
+
+                        <!-- خرید -->
+                        <TextBlock Text="خرید" Style="{StaticResource SidebarSectionHeader}"/>
+
+                        <Button Content="🛒  فاکتور خرید" Style="{StaticResource SidebarMenuItem}"
+                                Command="{Binding NavigateToCommand}" CommandParameter="PurchaseInvoices"/>
+
+                        <!-- CRM -->
+                        <TextBlock Text="مشتریان" Style="{StaticResource SidebarSectionHeader}"/>
+
+                        <Button Content="👥  مشتریان" Style="{StaticResource SidebarMenuItem}"
+                                Command="{Binding NavigateToCommand}" CommandParameter="Customers"/>
+                        <Button Content="🏪  تأمین‌کنندگان" Style="{StaticResource SidebarMenuItem}"
+                                Command="{Binding NavigateToCommand}" CommandParameter="Suppliers"/>
+
+                        <!-- HRM -->
+                        <TextBlock Text="منابع انسانی" Style="{StaticResource SidebarSectionHeader}"/>
+
+                        <Button Content="👤  کارکنان" Style="{StaticResource SidebarMenuItem}"
+                                Command="{Binding NavigateToCommand}" CommandParameter="Employees"/>
+                        <Button Content="💰  حقوق و دستمزد" Style="{StaticResource SidebarMenuItem}"
+                                Command="{Binding NavigateToCommand}" CommandParameter="Salaries"/>
+
+                        <!-- تنظیمات -->
+                        <TextBlock Text="تنظیمات" Style="{StaticResource SidebarSectionHeader}"/>
+
+                        <Button Content="⚙  تنظیمات شرکت" Style="{StaticResource SidebarMenuItem}"
+                                Command="{Binding NavigateToCommand}" CommandParameter="CompanySettings"/>
+                        <Button Content="👤  مدیریت کاربران" Style="{StaticResource SidebarMenuItem}"
+                                Command="{Binding NavigateToCommand}" CommandParameter="UserManagement"/>
+                        <Button Content="💾  پشتیبان‌گیری" Style="{StaticResource SidebarMenuItem}"
+                                Command="{Binding NavigateToCommand}" CommandParameter="Backup"/>
+                    </StackPanel>
+                </ScrollViewer>
+
+                <!-- User Info Footer -->
+                <Border Grid.Row="2" Background="#15182A" Padding="14,12">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+
+                        <StackPanel Grid.Column="0">
+                            <TextBlock Text="{Binding UserName}" Foreground="White"
+                                       FontFamily="{StaticResource VazirFont}" FontWeight="SemiBold"/>
+                            <TextBlock Text="{Binding CurrentDate}" Foreground="#6878A8"
+                                       FontFamily="{StaticResource VazirFont}" FontSize="11"/>
+                        </StackPanel>
+
+                        <Button Grid.Column="1" Content="خروج"
+                                Style="{StaticResource SidebarMenuItem}"
+                                Foreground="#E74C3C"
+                                Command="{Binding LogoutCommand}"/>
+                    </Grid>
+                </Border>
+            </Grid>
+        </Border>
+
+        <!-- =============================================
+             MAIN CONTENT AREA
+             ============================================= -->
+        <Grid Grid.Column="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="56"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+
+            <!-- Top Bar -->
+            <Border Grid.Row="0" Background="{DynamicResource RibbonBackground}"
+                    BorderBrush="{DynamicResource BorderColor}" BorderThickness="0,0,0,1">
+                <Grid Margin="16,0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+
+                    <!-- Page Title -->
+                    <StackPanel Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center">
+                        <TextBlock Text="{Binding CurrentPageTitle}"
+                                   FontSize="17" FontWeight="SemiBold"
+                                   Foreground="{DynamicResource PrimaryText}"
+                                   VerticalAlignment="Center"
+                                   FontFamily="{StaticResource VazirFont}"/>
+                    </StackPanel>
+
+                    <!-- Top Bar Actions -->
+                    <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
+
+                        <!-- Quick Actions -->
+                        <Button Content="+ فاکتور فروش"
+                                Style="{StaticResource PrimaryButton}"
+                                Height="34" FontSize="12" Margin="0,0,8,0"
+                                Command="{Binding OpenNewSalesInvoiceCommand}"/>
+
+                        <Button Content="🖨 صندوق"
+                                Style="{StaticResource SecondaryButton}"
+                                Height="34" FontSize="12" Margin="0,0,16,0"
+                                Command="{Binding OpenPOSCommand}"/>
+
+                        <!-- Theme Toggle -->
+                        <Button Content="{Binding ThemeIcon}"
+                                Style="{StaticResource IconButton}"
+                                Command="{Binding ToggleThemeCommand}"
+                                ToolTip="تغییر تم"/>
+
+                        <!-- Notifications -->
+                        <Grid Margin="8,0,0,0">
+                            <Button Content="🔔" Style="{StaticResource IconButton}"
+                                    ToolTip="اعلان‌ها"/>
+                            <Border Width="18" Height="18" CornerRadius="9"
+                                    Background="#E74C3C" HorizontalAlignment="Left"
+                                    VerticalAlignment="Top" Margin="0,0,0,0"
+                                    Visibility="{Binding PendingCheques, Converter={x:Static converters:GreaterThanZeroVisibilityConverter.Instance}}">
+                                <TextBlock Text="{Binding PendingCheques}" Foreground="White"
+                                           FontSize="10" HorizontalAlignment="Center"
+                                           VerticalAlignment="Center"/>
+                            </Border>
+                        </Grid>
+
+                        <!-- User Avatar -->
+                        <Border Width="36" Height="36" CornerRadius="18" Margin="12,0,0,0">
+                            <Border.Background>
+                                <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                                    <GradientStop Color="#4B7BEC" Offset="0"/>
+                                    <GradientStop Color="#9B59B6" Offset="1"/>
+                                </LinearGradientBrush>
+                            </Border.Background>
+                            <TextBlock Text="{Binding UserName[0]}" Foreground="White"
+                                       HorizontalAlignment="Center" VerticalAlignment="Center"
+                                       FontWeight="Bold" FontSize="15"
+                                       FontFamily="{StaticResource VazirFont}"/>
+                        </Border>
+                    </StackPanel>
+                </Grid>
+            </Border>
+
+            <!-- Content Area -->
+            <ContentPresenter Grid.Row="1"
+                              Content="{Binding CurrentView}"
+                              Margin="0"/>
+        </Grid>
+    </Grid>
+</Window>

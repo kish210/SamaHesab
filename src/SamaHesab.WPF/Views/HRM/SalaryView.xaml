@@ -1,0 +1,97 @@
+﻿<UserControl x:Class="SamaHesab.WPF.Views.HRM.SalaryView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             Background="{DynamicResource AppBackground}"
+             FlowDirection="RightToLeft">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <!-- Toolbar -->
+        <Border Grid.Row="0" Background="{DynamicResource RibbonBackground}"
+                BorderBrush="{DynamicResource BorderColor}" BorderThickness="0,0,0,1" Padding="12,8">
+            <StackPanel Orientation="Horizontal">
+                <Button Content="🔄 محاسبه حقوق" Style="{StaticResource PrimaryButton}"   Height="36" Margin="0,0,6,0" Command="{Binding LoadSlipsCommand}"/>
+                <Button Content="✓ ثبت همه"       Style="{StaticResource SuccessButton}"   Height="36" Margin="0,0,6,0" Command="{Binding PostAllCommand}"/>
+                <Button Content="🖨 چاپ فیش"      Style="{StaticResource SecondaryButton}" Height="36" Margin="0,0,6,0" Command="{Binding PrintSlipCommand}" CommandParameter="{Binding SelectedSlip}"/>
+                <Button Content="📊 گزارش Excel"   Style="{StaticResource SecondaryButton}" Height="36"/>
+            </StackPanel>
+        </Border>
+
+        <!-- Period Selection -->
+        <Border Grid.Row="1" Background="{DynamicResource CardBackground}"
+                BorderBrush="{DynamicResource BorderColor}" BorderThickness="0,0,0,1" Padding="16,10">
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Text="سال:" VerticalAlignment="Center" Foreground="{DynamicResource SecondaryText}"
+                           FontFamily="{StaticResource VazirFont}" Margin="0,0,8,0"/>
+                <ComboBox ItemsSource="{Binding Years}" SelectedItem="{Binding SelectedYear}" Width="80" Height="34" Margin="0,0,16,0">
+                    <ComboBox.Style><Style TargetType="ComboBox" BasedOn="{StaticResource BaseComboBox}"/></ComboBox.Style>
+                </ComboBox>
+                <TextBlock Text="ماه:" VerticalAlignment="Center" Foreground="{DynamicResource SecondaryText}"
+                           FontFamily="{StaticResource VazirFont}" Margin="0,0,8,0"/>
+                <ComboBox ItemsSource="{Binding Months}" DisplayMemberPath="Name" SelectedValuePath="Number"
+                          SelectedValue="{Binding SelectedMonth}" Width="110" Height="34" Margin="0,0,16,0">
+                    <ComboBox.Style><Style TargetType="ComboBox" BasedOn="{StaticResource BaseComboBox}"/></ComboBox.Style>
+                </ComboBox>
+                <Button Content="🔍 نمایش" Style="{StaticResource PrimaryButton}" Height="34" Command="{Binding LoadSlipsCommand}"/>
+            </StackPanel>
+        </Border>
+
+        <!-- Salary Grid -->
+        <DataGrid Grid.Row="2" ItemsSource="{Binding SalarySlips}" AutoGenerateColumns="False"
+                  CanUserAddRows="False" BorderThickness="0" RowHeight="44" ColumnHeaderHeight="44"
+                  AlternatingRowBackground="{DynamicResource TableAltRowBg}"
+                  Background="{DynamicResource TableRowBg}" Foreground="{DynamicResource PrimaryText}">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="نام کارمند"    Binding="{Binding EmployeeName}" Width="*"/>
+                <DataGridTextColumn Header="دپارتمان"      Binding="{Binding Department}" Width="100"/>
+                <DataGridTextColumn Header="حقوق پایه"     Binding="{Binding BaseSalary,   StringFormat='{}{0:N0}'}" Width="120"/>
+                <DataGridTextColumn Header="اضافه‌کاری"    Binding="{Binding OvertimePay,  StringFormat='{}{0:N0}'}" Width="110"/>
+                <DataGridTextColumn Header="مزایا"         Binding="{Binding Allowances,   StringFormat='{}{0:N0}'}" Width="100"/>
+                <DataGridTextColumn Header="حق. ناخالص"   Binding="{Binding GrossSalary,  StringFormat='{}{0:N0}'}" Width="130"/>
+                <DataGridTextColumn Header="بیمه"          Binding="{Binding InsuranceDeduct, StringFormat='{}{0:N0}'}" Width="100"/>
+                <DataGridTextColumn Header="مالیات"        Binding="{Binding TaxDeduct,    StringFormat='{}{0:N0}'}" Width="100"/>
+                <DataGridTextColumn Header="حق. خالص"     Binding="{Binding NetSalary,    StringFormat='{}{0:N0}'}" Width="130"/>
+                <DataGridTemplateColumn Width="80">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Button Content="🖨 فیش" Style="{StaticResource IconButton}" FontSize="11"
+                                    Foreground="{DynamicResource PrimaryAccent}"
+                                    Command="{Binding DataContext.PrintSlipCommand, RelativeSource={RelativeSource AncestorType=DataGrid}}"
+                                    CommandParameter="{Binding}"/>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+            </DataGrid.Columns>
+        </DataGrid>
+
+        <!-- Totals Footer -->
+        <Border Grid.Row="3" Background="{DynamicResource SurfaceBackground}"
+                BorderBrush="{DynamicResource BorderColor}" BorderThickness="0,1,0,0" Padding="16,12">
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                <Border Background="{DynamicResource CardBackground}" CornerRadius="8" Padding="16,8" Margin="0,0,12,0">
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="جمع ناخالص: " Foreground="{DynamicResource SecondaryText}" FontFamily="{StaticResource VazirFont}"/>
+                        <TextBlock Text="{Binding TotalGross, StringFormat='{}{0:N0}'}" Foreground="{DynamicResource WarningColor}" FontWeight="Bold" FontFamily="{StaticResource VazirFont}"/>
+                    </StackPanel>
+                </Border>
+                <Border Background="{DynamicResource CardBackground}" CornerRadius="8" Padding="16,8" Margin="0,0,12,0">
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="بیمه کل: " Foreground="{DynamicResource SecondaryText}" FontFamily="{StaticResource VazirFont}"/>
+                        <TextBlock Text="{Binding TotalInsurance, StringFormat='{}{0:N0}'}" Foreground="{DynamicResource DangerColor}" FontWeight="Bold" FontFamily="{StaticResource VazirFont}"/>
+                    </StackPanel>
+                </Border>
+                <Border Background="#05966930" CornerRadius="8" Padding="16,8">
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="جمع قابل پرداخت: " Foreground="{DynamicResource SecondaryText}" FontFamily="{StaticResource VazirFont}"/>
+                        <TextBlock Text="{Binding TotalNet, StringFormat='{}{0:N0} ریال'}" Foreground="#059669" FontWeight="Bold" FontSize="16" FontFamily="{StaticResource VazirFont}"/>
+                    </StackPanel>
+                </Border>
+            </StackPanel>
+        </Border>
+    </Grid>
+</UserControl>

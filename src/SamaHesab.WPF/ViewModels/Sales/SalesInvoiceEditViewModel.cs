@@ -1,0 +1,192 @@
+﻿using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
+using MediatR;
+using SamaHesab.Application.Common.Interfaces;
+using SamaHesab.Application.Sales.Commands;
+using SamaHesab.Domain.Enums;
+using SamaHesab.Domain.Interfaces.Repositories;
+using SamaHesab.WPF.Services;
+using SamaHesab.WPF.ViewModels.Shell;
+using System.Collections.ObjectModel;
+
+namespace SamaHesab.WPF.ViewModels.Sales;
+
+public partial class SalesInvoiceEditViewModel : BaseViewModel
+{
+    private readonly IMediator _mediator;
+    private readonly ICurrentUserService _currentUser;
+    private readonly IProductRepository _productRepository;
+    private readonly IPersianCalendarService _calendar;
+
+    [ObservableProperty] private string _invoiceNumber = "--- خودکار ---";
+    [ObservableProperty] private string _invoiceDate = string.Empty;
+    [ObservableProperty] private int _selectedCustomerId;
+    [ObservableProperty] private string _selectedCustomerName = string.Empty;
+    [ObservableProperty] private int _selectedWarehouseId;
+    [ObservableProperty] private string _invoiceType = "فروش";
+    [ObservableProperty] private string _priceLevel = "خرده";
+    [ObservableProperty] private string? _dueDate;
+    [ObservableProperty] private string? _description;
+    [ObservableProperty] private string _productSearch = string.Empty;
+    [ObservableProperty] private decimal _addQty = 1;
+    [ObservableProperty] private decimal _addUnitPrice;
+    [ObservableProperty] private decimal _addDiscountPct;
+    [ObservableProperty] private decimal _addTaxPct;
+    [ObservableProperty] private SalesInvoiceItemRow? _selectedItem;
+    [ObservableProperty] private decimal _subTotal;
+    [ObservableProperty] private decimal _totalDiscount;
+    [ObservableProperty] private decimal _totalTax;
+    [ObservableProperty] private decimal _shipping;
+    [ObservableProperty] private decimal _otherCosts;
+    [ObservableProperty] private decimal _grandTotal;
+    [ObservableProperty] private decimal _paidAmount;
+    [ObservableProperty] private decimal _remainAmount;
+    [ObservableProperty] private string _paymentType = "نقدی";
+
+    public ObservableCollection<SalesInvoiceItemRow> InvoiceItems { get; } = new();
+    public ObservableCollection<ProductSearchResult> SearchResults { get; } = new();
+    public List<CustomerItem> Customers { get; private set; } = new();
+    public List<WarehouseItem> Warehouses { get; private set; } = new();
+    public List<string> InvoiceTypes { get; } = new() { "فروش", "برگشت از فروش", "پیش‌فاکتور" };
+    public List<string> PriceLevels { get; } = new() { "خرده", "عمده", "ویژه" };
+    public List<string> PaymentTypes { get; } = new() { "نقدی", "کارتخوان", "چک", "نسیه", "اقساط" };
+
+    private int _editingId;
+
+    public SalesInvoiceEditViewModel(IMediator mediator, ICurrentUserService currentUser,
+        IProductRepository productRepository, IDialogService dialogService,
+        INavigationService navigationService, IPersianCalendarService calendar)
+        : base(dialogService, navigationService)
+    {
+        _mediator = mediator; _currentUser = currentUser;
+        _productRepository = productRepository; _calendar = calendar;
+    }
+
+    public override async Task LoadAsync()
+    {
+        InvoiceDate = _calendar.GetCurrentPersianDate();
+        Customers = new List<CustomerItem> { new(1,"علی احمدی","09120000001"), new(2,"شرکت آلفا","02144556677") };
+        Warehouses = new List<WarehouseItem> { new(1,"انبار مرکزی"), new(2,"انبار شعبه ۱") };
+        if (Warehouses.Any()) SelectedWarehouseId = Warehouses[0].Id;
+        await Task.CompletedTask;
+    }
+
+    [RelayCommand]
+    private async Task SearchProductAsync()
+    {
+        if (string.IsNullOrWhiteSpace(ProductSearch)) return;
+        var products = await _productRepository.SearchAsync(_currentUser.CompanyId ?? 1, ProductSearch);
+        SearchResults.Clear();
+        foreach (var p in products.Take(20))
+            SearchResults.Add(new ProductSearchResult(p.Id, p.Code, p.Name, p.Barcode, p.SalePrice, p.TaxRate));
+        if (SearchResults.Count == 1) { AddToCart(SearchResults[0]); ProductSearch = string.Empty; }
+    }
+
+    [RelayCommand]
+    private void AddToCart(ProductSearchResult? product)
+    {
+        if (product == null) return;
+        AddUnitPrice = product.Price; AddTaxPct = product.TaxRate;
+        var existing = InvoiceItems.FirstOrDefault(i => i.ProductId == product.Id);
+        if (existing != null) { existing.Quantity += AddQty; existing.Recalculate(); }
+        else
+        {
+            var row = new SalesInvoiceItemRow
+            {
+                RowNumber = InvoiceItems.Count + 1, ProductId = product.Id,
+                ProductCode = product.Code, ProductName = product.Name,
+                Quantity = AddQty, UnitPrice = AddUnitPrice,
+                DiscountPct = AddDiscountPct, TaxPct = AddTaxPct
+            };
+            row.Recalculate(); row.PropertyChanged += (_, _) => RecalculateTotals();
+            InvoiceItems.Add(row);
+        }
+        RecalculateTotals();
+        ProductSearch = string.Empty; AddQty = 1; AddDiscountPct = 0; SearchResults.Clear();
+    }
+
+    [RelayCommand] private void RemoveItem(SalesInvoiceItemRow? i) { if (i != null) { InvoiceItems.Remove(i); RecalculateTotals(); } }
+
+    private void RecalculateTotals()
+    {
+        SubTotal = InvoiceItems.Sum(i => i.Quantity * i.UnitPrice);
+        TotalDiscount = InvoiceItems.Sum(i => i.DiscountAmount);
+        TotalTax = InvoiceItems.Sum(i => i.TaxAmount);
+        GrandTotal = SubTotal - TotalDiscount + TotalTax + Shipping + OtherCosts;
+        RemainAmount = GrandTotal - PaidAmount;
+    }
+
+    [RelayCommand]
+    private async Task PostInvoiceAsync()
+    {
+        if (SelectedCustomerId == 0) { await _dialogService.ShowErrorAsync("مشتری را انتخاب کنید."); return; }
+        if (!InvoiceItems.Any()) { await _dialogService.ShowErrorAsync("حداقل یک ردیف وارد کنید."); return; }
+        var ok = await _dialogService.ConfirmAsync($"فاکتور فروش {GrandTotal:N0} ریال قطعی شود؟");
+        if (!ok) return;
+        await ExecuteAsync(async () =>
+        {
+                        var cmd = new CreateSalesInvoiceCommand(
+                BranchId: _currentUser.BranchId ?? 1, FiscalYearId: 1,
+                InvoiceDate: InvoiceDate, CustomerId: SelectedCustomerId,
+                WarehouseId: SelectedWarehouseId, InvoiceType: Domain.Enums.InvoiceType.Sale,
+                PriceLevel: PriceLevel, SalesRepId: null, DueDate: DueDate, Description: Description,
+                Shipping: Shipping, OtherCosts: OtherCosts,
+                Items: InvoiceItems.Select(i => new SalesInvoiceItemDto(
+                    i.ProductId, i.Quantity, i.UnitPrice, i.DiscountPct, i.TaxPct, null, null, null)).ToList());
+            var result = await _mediator.Send(cmd);
+            if (result.Succeeded) { await _dialogService.ShowSuccessAsync("فاکتور فروش ثبت شد."); NewInvoice(); }
+            else await _dialogService.ShowErrorAsync(result.ErrorMessage);
+        }, "در حال ثبت فاکتور...");
+    }
+
+    [RelayCommand]
+    private void NewInvoice()
+    {
+        _editingId = 0; InvoiceNumber = "--- خودکار ---";
+        InvoiceDate = _calendar.GetCurrentPersianDate();
+        SelectedCustomerId = 0; SelectedCustomerName = string.Empty;
+        Description = null; DueDate = null; InvoiceItems.Clear();
+        PaidAmount = 0; RecalculateTotals();
+    }
+
+    [RelayCommand] private async Task PrintAsync() => await _dialogService.ShowInfoAsync("در حال چاپ فاکتور...");
+    [RelayCommand] private async Task SaveDraftAsync() { await _dialogService.ShowSuccessAsync("پیش‌نویس ذخیره شد."); }
+
+    partial void OnShippingChanged(decimal v) => RecalculateTotals();
+    partial void OnOtherCostsChanged(decimal v) => RecalculateTotals();
+    partial void OnPaidAmountChanged(decimal v) => RemainAmount = GrandTotal - v;
+}
+
+public partial class SalesInvoiceItemRow : ObservableObject
+{
+    [ObservableProperty] private int _rowNumber;
+    [ObservableProperty] private int _productId;
+    [ObservableProperty] private string _productCode = string.Empty;
+    [ObservableProperty] private string _productName = string.Empty;
+    [ObservableProperty] private string? _description;
+    [ObservableProperty] private decimal _quantity;
+    [ObservableProperty] private decimal _unitPrice;
+    [ObservableProperty] private decimal _discountPct;
+    [ObservableProperty] private decimal _taxPct;
+    [ObservableProperty] private decimal _discountAmount;
+    [ObservableProperty] private decimal _taxAmount;
+    [ObservableProperty] private decimal _netAmount;
+
+    partial void OnQuantityChanged(decimal v) => Recalculate();
+    partial void OnUnitPriceChanged(decimal v) => Recalculate();
+    partial void OnDiscountPctChanged(decimal v) => Recalculate();
+    partial void OnTaxPctChanged(decimal v) => Recalculate();
+
+    public void Recalculate()
+    {
+        var sub = Quantity * UnitPrice;
+        DiscountAmount = sub * DiscountPct / 100;
+        var after = sub - DiscountAmount;
+        TaxAmount = after * TaxPct / 100;
+        NetAmount = after + TaxAmount;
+    }
+}
+
+public record CustomerItem(int Id, string Name, string? Mobile);
+public record WarehouseItem(int Id, string Name);
+
