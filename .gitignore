@@ -109,3 +109,6 @@ build/*.wixpdb
 !build/SamaHesab_Setup.msi
 !build/SamaHesab-Portable.zip
 build/_smoke/
+
+# Telerik license key (do not commit)
+telerik-license.txt
