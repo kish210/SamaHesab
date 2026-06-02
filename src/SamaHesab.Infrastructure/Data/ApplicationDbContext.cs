@@ -17,6 +17,7 @@ public class ApplicationDbContext : DbContext
     public DbSet<VoucherItem> VoucherItems { get; set; }
     public DbSet<Account> Accounts { get; set; }
     public DbSet<Cheque> Cheques { get; set; }
+    public DbSet<BankAccount> BankAccounts { get; set; }
 
     // Inventory
     public DbSet<Product> Products { get; set; }
@@ -48,6 +49,7 @@ public class ApplicationDbContext : DbContext
         modelBuilder.Entity<Voucher>().ToTable("Vouchers", "Acc");
         modelBuilder.Entity<VoucherItem>().ToTable("VoucherItems", "Acc");
         modelBuilder.Entity<Cheque>().ToTable("Cheques", "Acc");
+        modelBuilder.Entity<BankAccount>().ToTable("BankAccounts", "Acc");
         modelBuilder.Entity<Product>().ToTable("Products", "Inv");
         modelBuilder.Entity<Warehouse>().ToTable("Warehouses", "Inv");
         modelBuilder.Entity<StockItem>().ToTable("StockItems", "Inv");

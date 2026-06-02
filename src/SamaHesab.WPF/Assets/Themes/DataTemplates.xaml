@@ -76,17 +76,9 @@
             </StackPanel>
         </Border>
     </DataTemplate>
-    <DataTemplate DataType="{x:Type acc:BankAccountViewModel}">
-        <ContentControl ContentTemplate="{StaticResource UnderConstruction}" Content="{Binding}"/>
-    </DataTemplate>
-    <DataTemplate DataType="{x:Type inv:WarehouseViewModel}">
-        <ContentControl ContentTemplate="{StaticResource UnderConstruction}" Content="{Binding}"/>
-    </DataTemplate>
-    <DataTemplate DataType="{x:Type inv:StockAdjustViewModel}">
-        <ContentControl ContentTemplate="{StaticResource UnderConstruction}" Content="{Binding}"/>
-    </DataTemplate>
-    <DataTemplate DataType="{x:Type hrm:AttendanceViewModel}">
-        <ContentControl ContentTemplate="{StaticResource UnderConstruction}" Content="{Binding}"/>
-    </DataTemplate>
+    <DataTemplate DataType="{x:Type acc:BankAccountViewModel}"><va:BankAccountView/></DataTemplate>
+    <DataTemplate DataType="{x:Type inv:WarehouseViewModel}"><vi:WarehouseView/></DataTemplate>
+    <DataTemplate DataType="{x:Type inv:StockAdjustViewModel}"><vi:StockAdjustView/></DataTemplate>
+    <DataTemplate DataType="{x:Type hrm:AttendanceViewModel}"><vhrm:AttendanceView/></DataTemplate>
 
 </ResourceDictionary>

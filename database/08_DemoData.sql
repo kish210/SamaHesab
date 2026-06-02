@@ -53,6 +53,15 @@ VALUES
  (@Cid, N'T1002', N'حقوقی', NULL, NULL, N'لاستیک بارز نمایندگی',N'03433220020', N'کرمان',  -15000000, 1),
  (@Cid, N'T1003', N'حقیقی', N'رضا', N'نوری', NULL,              N'09124440030', N'تهران',   -5000000, 1),
  (@Cid, N'T1004', N'حقوقی', NULL, NULL, N'باتری سپاهان پخش',    N'03134440040', N'اصفهان', -28000000, 1);
+-- ── Bank accounts (AccountId references any leaf account) ───────────────────
+DECLARE @Acc INT = (SELECT TOP 1 Id FROM Acc.Accounts WHERE CompanyId=@Cid AND IsLeaf=1 ORDER BY Id);
+IF @Acc IS NOT NULL AND NOT EXISTS (SELECT 1 FROM Acc.BankAccounts WHERE CompanyId=@Cid)
+INSERT INTO Acc.BankAccounts
+    (CompanyId, AccountId, BankName, AccountNumber, ShebaNumber, CardNumber, BranchName, OpeningBalance, IsActive)
+VALUES
+ (@Cid, @Acc, N'بانک ملت',    N'1234567890',  N'IR120120000000001234567890', N'6104-3370-0000-0001', N'شعبه مرکزی', 250000000, 1),
+ (@Cid, @Acc, N'بانک ملی',    N'9876543210',  N'IR550170000000009876543210', N'6037-9900-0000-0002', N'شعبه ولیعصر', 180000000, 1),
+ (@Cid, @Acc, N'بانک صادرات', N'5555444433',  N'IR330190000000005555444433', N'6037-6900-0000-0003', N'شعبه آزادی', 95000000, 1);
 GO
 PRINT 'Demo data inserted.';
 GO
