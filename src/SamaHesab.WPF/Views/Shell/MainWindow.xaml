@@ -383,33 +383,16 @@
                 <ColumnDefinition Width="250"/>
             </Grid.ColumnDefinitions>
 
-            <!-- Workspace tabs -->
-            <TabControl Grid.Column="0" Margin="8"
-                        ItemsSource="{Binding OpenTabs}"
-                        SelectedItem="{Binding SelectedTab, Mode=TwoWay}"
-                        Background="Transparent" BorderThickness="0">
-                <TabControl.ItemTemplate>
-                    <DataTemplate>
-                        <StackPanel Orientation="Horizontal">
-                            <TextBlock Text="{Binding Title}" VerticalAlignment="Center" FontSize="13"/>
-                            <Button Width="18" Height="18" Margin="8,0,0,0" Padding="0"
-                                    Background="Transparent" BorderThickness="0" Cursor="Hand"
-                                    Visibility="{Binding CanClose, Converter={StaticResource BoolVis}}"
-                                    Command="{Binding DataContext.CloseTabCommand, RelativeSource={RelativeSource AncestorType=TabControl}}"
-                                    CommandParameter="{Binding}">
-                                <materialDesign:PackIcon Kind="Close" Width="14" Height="14"/>
-                            </Button>
-                        </StackPanel>
-                    </DataTemplate>
-                </TabControl.ItemTemplate>
-                <TabControl.ContentTemplate>
-                    <DataTemplate>
-                        <Border Background="{DynamicResource AppBackground}">
-                            <ContentControl Content="{Binding Content}"/>
-                        </Border>
-                    </DataTemplate>
-                </TabControl.ContentTemplate>
-            </TabControl>
+            <!-- Workspace: Telerik RadDocking (MDI document host) -->
+            <telerik:RadDocking Grid.Column="0" x:Name="docking" Margin="4"
+                                Close="Docking_Close" BorderThickness="0"
+                                HasDocumentHost="True">
+                <telerik:RadDocking.DocumentHost>
+                    <telerik:RadSplitContainer>
+                        <telerik:RadPaneGroup x:Name="docGroup"/>
+                    </telerik:RadSplitContainer>
+                </telerik:RadDocking.DocumentHost>
+            </telerik:RadDocking>
 
             <!-- Tree navigation -->
             <Border Grid.Column="1" Background="{DynamicResource SidebarBackground}">

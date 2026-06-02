@@ -33,6 +33,7 @@
     <PackageReference Include="Serilog.Extensions.Logging" Version="9.0.0" />
     <PackageReference Include="Serilog.Sinks.File" Version="6.0.0" />
     <PackageReference Include="Telerik.Windows.Controls.Data.for.Wpf" Version="2025.2.521" />
+    <PackageReference Include="Telerik.Windows.Controls.Docking.for.Wpf" Version="2025.2.521" />
     <PackageReference Include="Telerik.Windows.Controls.GridView.Export.for.Wpf" Version="2025.2.521" />
     <PackageReference Include="Telerik.Windows.Controls.GridView.for.Wpf" Version="2025.2.521" />
     <PackageReference Include="Telerik.Windows.Controls.Input.for.Wpf" Version="2025.2.521" />
