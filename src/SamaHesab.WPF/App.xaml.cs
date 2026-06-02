@@ -150,6 +150,14 @@ public partial class App : System.Windows.Application
             }
         });
 
+        // ─── Self-test of the real persistence paths (dev only) ────────────────
+        if (Environment.GetEnvironmentVariable("SAMA_SELFTEST") == "1")
+        {
+            await RunSelfTestAsync();
+            Shutdown();
+            return;
+        }
+
         // ─── Show Login (or skip straight to the shell for UI smoke-tests) ─────
         if (Environment.GetEnvironmentVariable("SAMA_SKIP_LOGIN") == "1")
         {
@@ -162,6 +170,84 @@ public partial class App : System.Windows.Application
 
         var loginWindow = _host.Services.GetRequiredService<LoginWindow>();
         loginWindow.Show();
+    }
+
+    private async Task RunSelfTestAsync()
+    {
+        var sb = new System.Text.StringBuilder();
+        void Line(string s) { sb.AppendLine(s); Log.Information("[SELFTEST] " + s); }
+        try
+        {
+            using var scope = _host!.Services.CreateScope();
+            var sp = scope.ServiceProvider;
+            ((Services.CurrentUserService)sp.GetRequiredService<ICurrentUserService>())
+                .SetCurrentUser(1, 1, 1, "admin", "مدیر سیستم", new[] { "ADMIN" }, Array.Empty<string>());
+
+            var mediator = sp.GetRequiredService<MediatR.IMediator>();
+            var products = sp.GetRequiredService<SamaHesab.Domain.Interfaces.Repositories.IProductRepository>();
+            var accounts = sp.GetRequiredService<SamaHesab.Domain.Interfaces.Repositories.IAccountRepository>();
+            var custRepo = sp.GetRequiredService<SamaHesab.Domain.Interfaces.Repositories.IRepository<SamaHesab.Domain.Entities.CRM.Customer>>();
+            var whRepo = sp.GetRequiredService<SamaHesab.Domain.Interfaces.Repositories.IWarehouseRepository>();
+
+            var prodList = await products.SearchAsync(1, "");
+            Line($"Products read: {prodList.Count}");
+            var custList = await custRepo.FindAsync(c => c.CompanyId == 1);
+            Line($"Customers read: {custList.Count}");
+            var whList = await whRepo.GetByCompanyAsync(1);
+            Line($"Warehouses read: {whList.Count}");
+            var leaf = await accounts.GetLeafAccountsAsync(1);
+            Line($"Leaf accounts read: {leaf.Count}");
+
+            // ── Sales invoice ──
+            try
+            {
+                var p = prodList.First(); var c = custList.First(); var w = whList.First();
+                var cmd = new SamaHesab.Application.Sales.Commands.CreateSalesInvoiceCommand(
+                    1, 1, "1403/06/15", c.Id, w.Id, SamaHesab.Domain.Enums.InvoiceType.Sale,
+                    "خرده", null, null, "تست خودکار", 0, 0,
+                    new System.Collections.Generic.List<SamaHesab.Application.Sales.Commands.SalesInvoiceItemDto>
+                    { new(p.Id, 2, p.SalePrice, 0, 9, null, null, null) });
+                var r = await mediator.Send(cmd);
+                Line(r.Succeeded ? $"SALES INVOICE: PASS (id={r.Value})" : $"SALES INVOICE: FAIL - {r.ErrorMessage}");
+            }
+            catch (Exception ex) { Line("SALES INVOICE: EXCEPTION - " + ex.GetBaseException().Message); }
+
+            // ── Voucher ──
+            try
+            {
+                var a1 = leaf.ElementAt(0).Id; var a2 = leaf.ElementAt(1).Id;
+                var cmd = new SamaHesab.Application.Accounting.Commands.CreateVoucherCommand(
+                    1, 1, "1403/06/15", 9, "تست سند", null, null, 1,
+                    new System.Collections.Generic.List<SamaHesab.Application.Accounting.Commands.VoucherItemDto>
+                    {
+                        new(1, a1, 1000000, 0, "بدهکار تست", null, null),
+                        new(2, a2, 0, 1000000, "بستانکار تست", null, null)
+                    });
+                var r = await mediator.Send(cmd);
+                Line(r.Succeeded ? $"VOUCHER: PASS (id={r.Value})" : $"VOUCHER: FAIL - {r.ErrorMessage}");
+            }
+            catch (Exception ex) { Line("VOUCHER: EXCEPTION - " + ex.GetBaseException().Message); }
+
+            // ── Customer create ──
+            try
+            {
+                var uow = sp.GetRequiredService<SamaHesab.Domain.Interfaces.Repositories.IUnitOfWork>();
+                var entity = SamaHesab.Domain.Entities.CRM.Customer.Create(1, "TST" + DateTime.Now.ToString("HHmmss"),
+                    "حقیقی", "تست", "خودکار", null);
+                await custRepo.AddAsync(entity);
+                await uow.SaveChangesAsync();
+                Line($"CUSTOMER CREATE: PASS (id={entity.Id})");
+            }
+            catch (Exception ex) { Line("CUSTOMER CREATE: EXCEPTION - " + ex.GetBaseException().Message); }
+        }
+        catch (Exception ex) { Line("SELFTEST FATAL: " + ex.GetBaseException().Message); }
+
+        try
+        {
+            System.IO.File.WriteAllText(
+                System.IO.Path.Combine(Services.AppSettingsStore.AppDataDir, "selftest.txt"), sb.ToString());
+        }
+        catch { }
     }
 
     protected override async void OnExit(ExitEventArgs e)

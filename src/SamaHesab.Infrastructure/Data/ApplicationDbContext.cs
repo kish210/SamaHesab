@@ -56,11 +56,24 @@ public class ApplicationDbContext : DbContext
         modelBuilder.Entity<BankAccount>().ToTable("BankAccounts", "Acc");
         modelBuilder.Entity<Product>().ToTable("Products", "Inv");
         modelBuilder.Entity<Warehouse>().ToTable("Warehouses", "Inv");
+        // Inv.Warehouses has no CreatedAt/UpdatedAt columns.
+        modelBuilder.Entity<Warehouse>().Ignore(w => w.CreatedAt);
+        modelBuilder.Entity<Warehouse>().Ignore(w => w.UpdatedAt);
         modelBuilder.Entity<StockItem>().ToTable("StockItems", "Inv");
         modelBuilder.Entity<Customer>().ToTable("Customers", "Crm");
         modelBuilder.Entity<Supplier>().ToTable("Suppliers", "Crm");
         modelBuilder.Entity<SalesInvoice>().ToTable("SalesInvoices", "Sal");
         modelBuilder.Entity<SalesInvoiceItem>().ToTable("SalesInvoiceItems", "Sal");
+        // SalesInvoice: Status maps to the 'StatusCode' Persian column; InvoiceType is Persian NVARCHAR.
+        modelBuilder.Entity<SalesInvoice>().Property(i => i.Status)
+            .HasColumnName("StatusCode").HasConversion(new InvoiceStatusToPersianConverter());
+        modelBuilder.Entity<SalesInvoice>().Property(i => i.InvoiceType)
+            .HasConversion(new InvoiceTypeToPersianConverter());
+        // Navigations not needed for now.
+        modelBuilder.Entity<SalesInvoice>().Ignore(i => i.Payments);
+        // The FK column is InvoiceId (not the convention 'SalesInvoiceId').
+        modelBuilder.Entity<SalesInvoice>()
+            .HasMany(i => i.Items).WithOne().HasForeignKey(it => it.InvoiceId);
         modelBuilder.Entity<Employee>().ToTable("Employees", "Hrm");
         // Avoid cascading the HR detail tables into the model for now.
         modelBuilder.Entity<Employee>().Ignore(e => e.AttendanceRecords);

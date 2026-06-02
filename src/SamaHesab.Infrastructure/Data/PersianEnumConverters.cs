@@ -40,6 +40,30 @@ public class ChequeStatusToPersianConverter : ValueConverter<ChequeStatus, strin
     };
 }
 
+public class InvoiceTypeToPersianConverter : ValueConverter<InvoiceType, string>
+{
+    public InvoiceTypeToPersianConverter() : base(
+        v => v == InvoiceType.SaleReturn ? "برگشت از فروش"
+           : v == InvoiceType.Quotation ? "پیش‌فاکتور"
+           : v == InvoiceType.Consignment ? "حواله" : "فروش",
+        s => s == "برگشت از فروش" ? InvoiceType.SaleReturn
+           : s == "پیش‌فاکتور" ? InvoiceType.Quotation
+           : s == "حواله" ? InvoiceType.Consignment : InvoiceType.Sale)
+    { }
+}
+
+public class InvoiceStatusToPersianConverter : ValueConverter<InvoiceStatus, string>
+{
+    public InvoiceStatusToPersianConverter() : base(
+        v => v == InvoiceStatus.Confirmed ? "تأیید شده"
+           : v == InvoiceStatus.Posted ? "قطعی"
+           : v == InvoiceStatus.Cancelled ? "لغو شده" : "پیش‌نویس",
+        s => s == "تأیید شده" ? InvoiceStatus.Confirmed
+           : s == "قطعی" ? InvoiceStatus.Posted
+           : s == "لغو شده" ? InvoiceStatus.Cancelled : InvoiceStatus.Draft)
+    { }
+}
+
 public class ChequeTypeToPersianConverter : ValueConverter<ChequeType, string>
 {
     public ChequeTypeToPersianConverter() : base(

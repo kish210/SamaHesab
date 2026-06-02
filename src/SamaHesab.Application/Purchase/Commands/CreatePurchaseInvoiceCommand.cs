@@ -111,7 +111,7 @@ public class CreatePurchaseInvoiceCommandHandler : IRequestHandler<CreatePurchas
         catch (Exception ex)
         {
             await _unitOfWork.RollbackTransactionAsync(ct);
-            return Result<int>.Failure(ex.Message);
+            return Result<int>.Failure(ex.GetBaseException().Message);
         }
     }
 }

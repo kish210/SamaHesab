@@ -72,6 +72,14 @@ VALUES
  (@Cid, N'E1002', N'0023456789', N'مریم',  N'رضایی',  N'زن',  N'مجرد',  N'کارشناسی ارشد', N'09122220002', N'1402/03/01', N'دائم', 150000000, 1),
  (@Cid, N'E1003', N'0034567890', N'رضا',   N'محمدی',  N'مرد', N'متاهل', N'دیپلم',    N'09123330003', N'1401/07/10', N'پیمانی',  95000000, 1),
  (@Cid, N'E1004', N'0045678901', N'زهرا',  N'کریمی',  N'زن',  N'متاهل', N'کارشناسی', N'09124440004', N'1403/02/20', N'موقت',    85000000, 1);
+-- ── Initial stock for every product in the main warehouse ──────────────────
+DECLARE @WH INT = (SELECT TOP 1 Id FROM Inv.Warehouses WHERE CompanyId=@Cid AND Code=N'WH1');
+IF @WH IS NOT NULL AND NOT EXISTS (SELECT 1 FROM Inv.StockItems WHERE WarehouseId=@WH)
+INSERT INTO Inv.StockItems (ProductId, WarehouseId, Quantity, AverageCost, LastCost, LastUpdated)
+SELECT p.Id, @WH,
+       ABS(CHECKSUM(NEWID())) % 50 + 10,   -- random qty 10..59
+       p.PurchasePrice, p.PurchasePrice, GETDATE()
+FROM Inv.Products p WHERE p.CompanyId=@Cid;
 GO
 PRINT 'Demo data inserted.';
 GO
