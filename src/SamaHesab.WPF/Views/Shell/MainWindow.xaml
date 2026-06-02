@@ -196,329 +196,70 @@
             </DockPanel>
         </Border>
 
-        <!-- ═══ Office-style Ribbon (Telerik RadRibbonView) ═══ -->
-        <telerik:RadRibbonView Grid.Row="1" x:Name="ribbon" ApplicationName="سما حساب"
-                               Title="" SelectedIndex="0" BorderThickness="0"
-                               FlowDirection="RightToLeft">
-            <telerik:RadRibbonTab Header="خانه">
-                <telerik:RadRibbonGroup Header="عمومی">
-                    <telerik:RadRibbonButton Text="داشبورد" Size="Large"
-                        Command="{Binding NavigateCommand}" CommandParameter="Dashboard"/>
-                    <telerik:RadRibbonButton Text="گزارش‌ها" Size="Large"
-                        Command="{Binding NavigateCommand}" CommandParameter="Reports"/>
-                    <telerik:RadRibbonButton Text="خروج" Size="Large"
-                        Command="{Binding LogoutCommand}"/>
-                </telerik:RadRibbonGroup>
-                <telerik:RadRibbonGroup Header="پوسته (تم)">
-                    <telerik:RadRibbonButton Text="Office 2019" Size="Medium"
-                        Command="{Binding ChangeThemeCommand}" CommandParameter="Office2019"/>
-                    <telerik:RadRibbonButton Text="Fluent" Size="Medium"
-                        Command="{Binding ChangeThemeCommand}" CommandParameter="Fluent"/>
-                    <telerik:RadRibbonButton Text="Crystal" Size="Medium"
-                        Command="{Binding ChangeThemeCommand}" CommandParameter="Crystal"/>
-                    <telerik:RadRibbonButton Text="Windows 11" Size="Medium"
-                        Command="{Binding ChangeThemeCommand}" CommandParameter="Windows11"/>
-                </telerik:RadRibbonGroup>
-            </telerik:RadRibbonTab>
+        <!-- ═══ Standard top menu ═══ -->
+        <Menu Grid.Row="1" FontFamily="{StaticResource VazirFont}" FontSize="13"
+              Background="{DynamicResource RibbonBackground}" Padding="8,3"
+              BorderBrush="{DynamicResource BorderColor}" BorderThickness="0,0,0,1">
+            <MenuItem Header="حسابداری">
+                <MenuItem Header="ثبت سند" Command="{Binding NavigateCommand}" CommandParameter="VoucherEdit"/>
+                <MenuItem Header="اسناد حسابداری" Command="{Binding NavigateCommand}" CommandParameter="Vouchers"/>
+                <MenuItem Header="نمودار حساب‌ها" Command="{Binding NavigateCommand}" CommandParameter="ChartOfAccounts"/>
+                <Separator/>
+                <MenuItem Header="گزارش‌ها" Command="{Binding NavigateCommand}" CommandParameter="Reports"/>
+            </MenuItem>
+            <MenuItem Header="خزانه‌داری">
+                <MenuItem Header="مدیریت چک" Command="{Binding NavigateCommand}" CommandParameter="Cheques"/>
+                <MenuItem Header="حساب‌های بانکی" Command="{Binding NavigateCommand}" CommandParameter="BankAccounts"/>
+            </MenuItem>
+            <MenuItem Header="فروش">
+                <MenuItem Header="فاکتور فروش" Command="{Binding NavigateCommand}" CommandParameter="SalesInvoice"/>
+                <MenuItem Header="لیست فاکتورها" Command="{Binding NavigateCommand}" CommandParameter="SalesInvoiceList"/>
+                <MenuItem Header="صندوق فروش" Command="{Binding NavigateCommand}" CommandParameter="POS"/>
+            </MenuItem>
+            <MenuItem Header="خرید">
+                <MenuItem Header="فاکتور خرید" Command="{Binding NavigateCommand}" CommandParameter="PurchaseInvoice"/>
+            </MenuItem>
+            <MenuItem Header="انبار">
+                <MenuItem Header="کالاها" Command="{Binding NavigateCommand}" CommandParameter="Products"/>
+                <MenuItem Header="انبارها" Command="{Binding NavigateCommand}" CommandParameter="Warehouses"/>
+                <MenuItem Header="تعدیل موجودی" Command="{Binding NavigateCommand}" CommandParameter="StockAdjust"/>
+            </MenuItem>
+            <MenuItem Header="اشخاص">
+                <MenuItem Header="مشتریان" Command="{Binding NavigateCommand}" CommandParameter="Customers"/>
+                <MenuItem Header="تأمین‌کنندگان" Command="{Binding NavigateCommand}" CommandParameter="Suppliers"/>
+            </MenuItem>
+            <MenuItem Header="منابع انسانی">
+                <MenuItem Header="کارکنان" Command="{Binding NavigateCommand}" CommandParameter="Employees"/>
+                <MenuItem Header="حقوق و دستمزد" Command="{Binding NavigateCommand}" CommandParameter="Salary"/>
+                <MenuItem Header="حضور و غیاب" Command="{Binding NavigateCommand}" CommandParameter="Attendance"/>
+            </MenuItem>
+            <MenuItem Header="گزارشات">
+                <MenuItem Header="گزارش‌ها" Command="{Binding NavigateCommand}" CommandParameter="Reports"/>
+            </MenuItem>
+            <MenuItem Header="سیستم">
+                <MenuItem Header="داشبورد" Command="{Binding NavigateCommand}" CommandParameter="Dashboard"/>
+                <MenuItem Header="تنظیمات" Command="{Binding NavigateCommand}" CommandParameter="Settings"/>
+                <MenuItem Header="پشتیبان‌گیری" Command="{Binding NavigateCommand}" CommandParameter="Backup"/>
+                <Separator/>
+                <MenuItem Header="خروج" Command="{Binding LogoutCommand}"/>
+            </MenuItem>
+            <MenuItem Header="نمایش (پوسته)">
+                <MenuItem Header="Office 2019" Command="{Binding ChangeThemeCommand}" CommandParameter="Office2019"/>
+                <MenuItem Header="Fluent" Command="{Binding ChangeThemeCommand}" CommandParameter="Fluent"/>
+                <MenuItem Header="Crystal" Command="{Binding ChangeThemeCommand}" CommandParameter="Crystal"/>
+                <MenuItem Header="Windows 11" Command="{Binding ChangeThemeCommand}" CommandParameter="Windows11"/>
+            </MenuItem>
+        </Menu>
 
-            <telerik:RadRibbonTab Header="حسابداری">
-                <telerik:RadRibbonGroup Header="اسناد">
-                    <telerik:RadRibbonButton Text="ثبت سند" Size="Large"
-                        Command="{Binding NavigateCommand}" CommandParameter="VoucherEdit"/>
-                    <telerik:RadRibbonButton Text="اسناد حسابداری" Size="Large"
-                        Command="{Binding NavigateCommand}" CommandParameter="Vouchers"/>
-                </telerik:RadRibbonGroup>
-                <telerik:RadRibbonGroup Header="کدینگ و گزارش">
-                    <telerik:RadRibbonButton Text="نمودار حساب‌ها" Size="Large"
-                        Command="{Binding NavigateCommand}" CommandParameter="ChartOfAccounts"/>
-                    <telerik:RadRibbonButton Text="گزارش‌ها" Size="Large"
-                        Command="{Binding NavigateCommand}" CommandParameter="Reports"/>
-                </telerik:RadRibbonGroup>
-            </telerik:RadRibbonTab>
-
-            <telerik:RadRibbonTab Header="خزانه‌داری">
-                <telerik:RadRibbonGroup Header="دریافت و پرداخت">
-                    <telerik:RadRibbonButton Text="مدیریت چک" Size="Large"
-                        Command="{Binding NavigateCommand}" CommandParameter="Cheques"/>
-                    <telerik:RadRibbonButton Text="حساب‌های بانکی" Size="Large"
-                        Command="{Binding NavigateCommand}" CommandParameter="BankAccounts"/>
-                </telerik:RadRibbonGroup>
-            </telerik:RadRibbonTab>
-
-            <telerik:RadRibbonTab Header="فروش">
-                <telerik:RadRibbonGroup Header="فروش">
-                    <telerik:RadRibbonButton Text="فاکتور فروش" Size="Large"
-                        Command="{Binding NavigateCommand}" CommandParameter="SalesInvoice"/>
-                    <telerik:RadRibbonButton Text="لیست فروش" Size="Large"
-                        Command="{Binding NavigateCommand}" CommandParameter="SalesInvoiceList"/>
-                    <telerik:RadRibbonButton Text="صندوق فروش" Size="Large"
-                        Command="{Binding NavigateCommand}" CommandParameter="POS"/>
-                </telerik:RadRibbonGroup>
-            </telerik:RadRibbonTab>
-
-            <telerik:RadRibbonTab Header="خرید">
-                <telerik:RadRibbonGroup Header="خرید">
-                    <telerik:RadRibbonButton Text="فاکتور خرید" Size="Large"
-                        Command="{Binding NavigateCommand}" CommandParameter="PurchaseInvoice"/>
-                </telerik:RadRibbonGroup>
-            </telerik:RadRibbonTab>
-
-            <telerik:RadRibbonTab Header="انبار">
-                <telerik:RadRibbonGroup Header="کالا و موجودی">
-                    <telerik:RadRibbonButton Text="کالاها" Size="Large"
-                        Command="{Binding NavigateCommand}" CommandParameter="Products"/>
-                    <telerik:RadRibbonButton Text="انبارها" Size="Large"
-                        Command="{Binding NavigateCommand}" CommandParameter="Warehouses"/>
-                    <telerik:RadRibbonButton Text="تعدیل موجودی" Size="Large"
-                        Command="{Binding NavigateCommand}" CommandParameter="StockAdjust"/>
-                </telerik:RadRibbonGroup>
-            </telerik:RadRibbonTab>
-
-            <telerik:RadRibbonTab Header="اشخاص">
-                <telerik:RadRibbonGroup Header="طرف‌حساب‌ها">
-                    <telerik:RadRibbonButton Text="مشتریان" Size="Large"
-                        Command="{Binding NavigateCommand}" CommandParameter="Customers"/>
-                    <telerik:RadRibbonButton Text="تأمین‌کنندگان" Size="Large"
-                        Command="{Binding NavigateCommand}" CommandParameter="Suppliers"/>
-                </telerik:RadRibbonGroup>
-            </telerik:RadRibbonTab>
-
-            <telerik:RadRibbonTab Header="مدیریت سیستم">
-                <telerik:RadRibbonGroup Header="منابع انسانی">
-                    <telerik:RadRibbonButton Text="کارکنان" Size="Large"
-                        Command="{Binding NavigateCommand}" CommandParameter="Employees"/>
-                    <telerik:RadRibbonButton Text="حقوق و دستمزد" Size="Large"
-                        Command="{Binding NavigateCommand}" CommandParameter="Salary"/>
-                    <telerik:RadRibbonButton Text="حضور و غیاب" Size="Large"
-                        Command="{Binding NavigateCommand}" CommandParameter="Attendance"/>
-                </telerik:RadRibbonGroup>
-                <telerik:RadRibbonGroup Header="سیستم">
-                    <telerik:RadRibbonButton Text="تنظیمات" Size="Large"
-                        Command="{Binding NavigateCommand}" CommandParameter="Settings"/>
-                    <telerik:RadRibbonButton Text="پشتیبان‌گیری" Size="Large"
-                        Command="{Binding NavigateCommand}" CommandParameter="Backup"/>
-                </telerik:RadRibbonGroup>
-            </telerik:RadRibbonTab>
-        </telerik:RadRibbonView>
-
-        <!-- (old flat command bar removed) -->
-        <Border Grid.Row="1" Visibility="Collapsed">
-            <ScrollViewer>
-                <StackPanel Orientation="Horizontal" Margin="8,6">
-                    <!-- فایل -->
-                    <Button Style="{StaticResource RibbonButton}" Command="{Binding NavigateCommand}" CommandParameter="Dashboard">
-                        <StackPanel><materialDesign:PackIcon Kind="ViewDashboardOutline" Width="24" Height="24" HorizontalAlignment="Center" Foreground="{DynamicResource PrimaryAccent}"/><TextBlock Text="داشبورد" FontSize="11" TextAlignment="Center" Margin="0,4,0,0"/></StackPanel>
-                    </Button>
-                    <Rectangle Width="1" Margin="4,8" Fill="{DynamicResource BorderColor}"/>
-                    <!-- حسابداری -->
-                    <Button Style="{StaticResource RibbonButton}" Command="{Binding NavigateCommand}" CommandParameter="Vouchers">
-                        <StackPanel><materialDesign:PackIcon Kind="FileDocumentMultipleOutline" Width="24" Height="24" HorizontalAlignment="Center" Foreground="{DynamicResource PrimaryAccent}"/><TextBlock Text="اسناد" FontSize="11" TextAlignment="Center" Margin="0,4,0,0"/></StackPanel>
-                    </Button>
-                    <Button Style="{StaticResource RibbonButton}" Command="{Binding NavigateCommand}" CommandParameter="VoucherEdit">
-                        <StackPanel><materialDesign:PackIcon Kind="FilePlusOutline" Width="24" Height="24" HorizontalAlignment="Center" Foreground="{DynamicResource PrimaryAccent}"/><TextBlock Text="ثبت سند" FontSize="11" TextAlignment="Center" Margin="0,4,0,0"/></StackPanel>
-                    </Button>
-                    <Button Style="{StaticResource RibbonButton}" Command="{Binding NavigateCommand}" CommandParameter="ChartOfAccounts">
-                        <StackPanel><materialDesign:PackIcon Kind="FileTreeOutline" Width="24" Height="24" HorizontalAlignment="Center" Foreground="{DynamicResource PrimaryAccent}"/><TextBlock Text="حساب‌ها" FontSize="11" TextAlignment="Center" Margin="0,4,0,0"/></StackPanel>
-                    </Button>
-                    <Rectangle Width="1" Margin="4,8" Fill="{DynamicResource BorderColor}"/>
-                    <!-- خزانه‌داری -->
-                    <Button Style="{StaticResource RibbonButton}" Command="{Binding NavigateCommand}" CommandParameter="Cheques">
-                        <StackPanel><materialDesign:PackIcon Kind="CheckbookArrowRight" Width="24" Height="24" HorizontalAlignment="Center" Foreground="{DynamicResource PrimaryAccent}"/><TextBlock Text="چک‌ها" FontSize="11" TextAlignment="Center" Margin="0,4,0,0"/></StackPanel>
-                    </Button>
-                    <Button Style="{StaticResource RibbonButton}" Command="{Binding NavigateCommand}" CommandParameter="BankAccounts">
-                        <StackPanel><materialDesign:PackIcon Kind="BankOutline" Width="24" Height="24" HorizontalAlignment="Center" Foreground="{DynamicResource PrimaryAccent}"/><TextBlock Text="بانک" FontSize="11" TextAlignment="Center" Margin="0,4,0,0"/></StackPanel>
-                    </Button>
-                    <Rectangle Width="1" Margin="4,8" Fill="{DynamicResource BorderColor}"/>
-                    <!-- فروش -->
-                    <Button Style="{StaticResource RibbonButton}" Command="{Binding NavigateCommand}" CommandParameter="SalesInvoice">
-                        <StackPanel><materialDesign:PackIcon Kind="CartArrowRight" Width="24" Height="24" HorizontalAlignment="Center" Foreground="{DynamicResource PrimaryAccent}"/><TextBlock Text="فاکتور فروش" FontSize="11" TextAlignment="Center" Margin="0,4,0,0"/></StackPanel>
-                    </Button>
-                    <Button Style="{StaticResource RibbonButton}" Command="{Binding NavigateCommand}" CommandParameter="SalesInvoiceList">
-                        <StackPanel><materialDesign:PackIcon Kind="FormatListBulletedSquare" Width="24" Height="24" HorizontalAlignment="Center" Foreground="{DynamicResource PrimaryAccent}"/><TextBlock Text="لیست فروش" FontSize="11" TextAlignment="Center" Margin="0,4,0,0"/></StackPanel>
-                    </Button>
-                    <Button Style="{StaticResource RibbonButton}" Command="{Binding NavigateCommand}" CommandParameter="POS">
-                        <StackPanel><materialDesign:PackIcon Kind="CashRegister" Width="24" Height="24" HorizontalAlignment="Center" Foreground="{DynamicResource PrimaryAccent}"/><TextBlock Text="صندوق" FontSize="11" TextAlignment="Center" Margin="0,4,0,0"/></StackPanel>
-                    </Button>
-                    <Rectangle Width="1" Margin="4,8" Fill="{DynamicResource BorderColor}"/>
-                    <!-- خرید -->
-                    <Button Style="{StaticResource RibbonButton}" Command="{Binding NavigateCommand}" CommandParameter="PurchaseInvoice">
-                        <StackPanel><materialDesign:PackIcon Kind="CartArrowDown" Width="24" Height="24" HorizontalAlignment="Center" Foreground="{DynamicResource PrimaryAccent}"/><TextBlock Text="فاکتور خرید" FontSize="11" TextAlignment="Center" Margin="0,4,0,0"/></StackPanel>
-                    </Button>
-                    <Rectangle Width="1" Margin="4,8" Fill="{DynamicResource BorderColor}"/>
-                    <!-- انبار -->
-                    <Button Style="{StaticResource RibbonButton}" Command="{Binding NavigateCommand}" CommandParameter="Products">
-                        <StackPanel><materialDesign:PackIcon Kind="PackageVariantClosed" Width="24" Height="24" HorizontalAlignment="Center" Foreground="{DynamicResource PrimaryAccent}"/><TextBlock Text="کالاها" FontSize="11" TextAlignment="Center" Margin="0,4,0,0"/></StackPanel>
-                    </Button>
-                    <Button Style="{StaticResource RibbonButton}" Command="{Binding NavigateCommand}" CommandParameter="Warehouses">
-                        <StackPanel><materialDesign:PackIcon Kind="Warehouse" Width="24" Height="24" HorizontalAlignment="Center" Foreground="{DynamicResource PrimaryAccent}"/><TextBlock Text="انبارها" FontSize="11" TextAlignment="Center" Margin="0,4,0,0"/></StackPanel>
-                    </Button>
-                    <Button Style="{StaticResource RibbonButton}" Command="{Binding NavigateCommand}" CommandParameter="StockAdjust">
-                        <StackPanel><materialDesign:PackIcon Kind="SwapHorizontal" Width="24" Height="24" HorizontalAlignment="Center" Foreground="{DynamicResource PrimaryAccent}"/><TextBlock Text="تعدیل" FontSize="11" TextAlignment="Center" Margin="0,4,0,0"/></StackPanel>
-                    </Button>
-                    <Rectangle Width="1" Margin="4,8" Fill="{DynamicResource BorderColor}"/>
-                    <!-- مشتریان -->
-                    <Button Style="{StaticResource RibbonButton}" Command="{Binding NavigateCommand}" CommandParameter="Customers">
-                        <StackPanel><materialDesign:PackIcon Kind="AccountGroupOutline" Width="24" Height="24" HorizontalAlignment="Center" Foreground="{DynamicResource PrimaryAccent}"/><TextBlock Text="مشتریان" FontSize="11" TextAlignment="Center" Margin="0,4,0,0"/></StackPanel>
-                    </Button>
-                    <Button Style="{StaticResource RibbonButton}" Command="{Binding NavigateCommand}" CommandParameter="Suppliers">
-                        <StackPanel><materialDesign:PackIcon Kind="TruckOutline" Width="24" Height="24" HorizontalAlignment="Center" Foreground="{DynamicResource PrimaryAccent}"/><TextBlock Text="تأمین‌کنندگان" FontSize="11" TextAlignment="Center" Margin="0,4,0,0"/></StackPanel>
-                    </Button>
-                    <Rectangle Width="1" Margin="4,8" Fill="{DynamicResource BorderColor}"/>
-                    <!-- گزارشات -->
-                    <Button Style="{StaticResource RibbonButton}" Command="{Binding NavigateCommand}" CommandParameter="Reports">
-                        <StackPanel><materialDesign:PackIcon Kind="ChartBar" Width="24" Height="24" HorizontalAlignment="Center" Foreground="{DynamicResource PrimaryAccent}"/><TextBlock Text="گزارش‌ها" FontSize="11" TextAlignment="Center" Margin="0,4,0,0"/></StackPanel>
-                    </Button>
-                    <Rectangle Width="1" Margin="4,8" Fill="{DynamicResource BorderColor}"/>
-                    <!-- مدیریت سیستم -->
-                    <Button Style="{StaticResource RibbonButton}" Command="{Binding NavigateCommand}" CommandParameter="Employees">
-                        <StackPanel><materialDesign:PackIcon Kind="AccountTieOutline" Width="24" Height="24" HorizontalAlignment="Center" Foreground="{DynamicResource PrimaryAccent}"/><TextBlock Text="کارکنان" FontSize="11" TextAlignment="Center" Margin="0,4,0,0"/></StackPanel>
-                    </Button>
-                    <Button Style="{StaticResource RibbonButton}" Command="{Binding NavigateCommand}" CommandParameter="Salary">
-                        <StackPanel><materialDesign:PackIcon Kind="CashMultiple" Width="24" Height="24" HorizontalAlignment="Center" Foreground="{DynamicResource PrimaryAccent}"/><TextBlock Text="حقوق" FontSize="11" TextAlignment="Center" Margin="0,4,0,0"/></StackPanel>
-                    </Button>
-                    <Button Style="{StaticResource RibbonButton}" Command="{Binding NavigateCommand}" CommandParameter="Settings">
-                        <StackPanel><materialDesign:PackIcon Kind="CogOutline" Width="24" Height="24" HorizontalAlignment="Center" Foreground="{DynamicResource PrimaryAccent}"/><TextBlock Text="تنظیمات" FontSize="11" TextAlignment="Center" Margin="0,4,0,0"/></StackPanel>
-                    </Button>
-                    <Button Style="{StaticResource RibbonButton}" Command="{Binding LogoutCommand}">
-                        <StackPanel><materialDesign:PackIcon Kind="LogoutVariant" Width="24" Height="24" HorizontalAlignment="Center" Foreground="{DynamicResource DangerColor}"/><TextBlock Text="خروج" FontSize="11" TextAlignment="Center" Margin="0,4,0,0"/></StackPanel>
-                    </Button>
-                </StackPanel>
-            </ScrollViewer>
-        </Border>
-
-        <!-- ═══ Nav (right) + Workspace (left) ═══ -->
-        <Grid Grid.Row="2">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="250"/>
-            </Grid.ColumnDefinitions>
-
-            <!-- Workspace: Telerik RadDocking (MDI document host) -->
-            <telerik:RadDocking Grid.Column="0" x:Name="docking" Margin="4"
-                                Close="Docking_Close" BorderThickness="0"
-                                HasDocumentHost="True">
-                <telerik:RadDocking.DocumentHost>
-                    <telerik:RadSplitContainer>
-                        <telerik:RadPaneGroup x:Name="docGroup"/>
-                    </telerik:RadSplitContainer>
-                </telerik:RadDocking.DocumentHost>
-            </telerik:RadDocking>
-
-            <!-- Tree navigation -->
-            <Border Grid.Column="1" Background="{DynamicResource SidebarBackground}">
-                <Border.Resources>
-                    <!-- Sidebar is dark, so force light text for all labels inside -->
-                    <Style TargetType="TextBlock">
-                        <Setter Property="FontFamily" Value="{StaticResource VazirFont}"/>
-                        <Setter Property="Foreground" Value="{DynamicResource SidebarText}"/>
-                    </Style>
-                </Border.Resources>
-                <ScrollViewer VerticalScrollBarVisibility="Auto" Padding="0,8">
-                    <StackPanel>
-                        <TextBlock Text="منوی اصلی" Foreground="#64748B" FontSize="11"
-                                   Margin="16,6,16,8"/>
-
-                        <Expander Header="حسابداری" Style="{StaticResource NavExpander}">
-                            <StackPanel>
-                                <Button Style="{StaticResource NavItem}" Command="{Binding NavigateCommand}" CommandParameter="Vouchers">
-                                    <StackPanel Orientation="Horizontal"><materialDesign:PackIcon Kind="FileDocumentOutline" Width="16" Height="16" VerticalAlignment="Center"/><TextBlock Text="اسناد حسابداری" Margin="8,0,0,0" VerticalAlignment="Center"/></StackPanel>
-                                </Button>
-                                <Button Style="{StaticResource NavItem}" Command="{Binding NavigateCommand}" CommandParameter="ChartOfAccounts">
-                                    <StackPanel Orientation="Horizontal"><materialDesign:PackIcon Kind="FileTreeOutline" Width="16" Height="16" VerticalAlignment="Center"/><TextBlock Text="نمودار حساب‌ها" Margin="8,0,0,0" VerticalAlignment="Center"/></StackPanel>
-                                </Button>
-                                <Button Style="{StaticResource NavItem}" Command="{Binding NavigateCommand}" CommandParameter="Reports">
-                                    <StackPanel Orientation="Horizontal"><materialDesign:PackIcon Kind="ChartBoxOutline" Width="16" Height="16" VerticalAlignment="Center"/><TextBlock Text="گزارش‌ها" Margin="8,0,0,0" VerticalAlignment="Center"/></StackPanel>
-                                </Button>
-                            </StackPanel>
-                        </Expander>
-
-                        <Expander Header="خزانه‌داری" Style="{StaticResource NavExpander}">
-                            <StackPanel>
-                                <Button Style="{StaticResource NavItem}" Command="{Binding NavigateCommand}" CommandParameter="Cheques">
-                                    <StackPanel Orientation="Horizontal"><materialDesign:PackIcon Kind="CheckbookArrowRight" Width="16" Height="16" VerticalAlignment="Center"/><TextBlock Text="مدیریت چک" Margin="8,0,0,0" VerticalAlignment="Center"/></StackPanel>
-                                </Button>
-                                <Button Style="{StaticResource NavItem}" Command="{Binding NavigateCommand}" CommandParameter="BankAccounts">
-                                    <StackPanel Orientation="Horizontal"><materialDesign:PackIcon Kind="BankOutline" Width="16" Height="16" VerticalAlignment="Center"/><TextBlock Text="حساب‌های بانکی" Margin="8,0,0,0" VerticalAlignment="Center"/></StackPanel>
-                                </Button>
-                            </StackPanel>
-                        </Expander>
-
-                        <Expander Header="فروش" Style="{StaticResource NavExpander}">
-                            <StackPanel>
-                                <Button Style="{StaticResource NavItem}" Command="{Binding NavigateCommand}" CommandParameter="SalesInvoice">
-                                    <StackPanel Orientation="Horizontal"><materialDesign:PackIcon Kind="CartArrowRight" Width="16" Height="16" VerticalAlignment="Center"/><TextBlock Text="فاکتور فروش" Margin="8,0,0,0" VerticalAlignment="Center"/></StackPanel>
-                                </Button>
-                                <Button Style="{StaticResource NavItem}" Command="{Binding NavigateCommand}" CommandParameter="SalesInvoiceList">
-                                    <StackPanel Orientation="Horizontal"><materialDesign:PackIcon Kind="FormatListBulletedSquare" Width="16" Height="16" VerticalAlignment="Center"/><TextBlock Text="لیست فروش" Margin="8,0,0,0" VerticalAlignment="Center"/></StackPanel>
-                                </Button>
-                                <Button Style="{StaticResource NavItem}" Command="{Binding NavigateCommand}" CommandParameter="POS">
-                                    <StackPanel Orientation="Horizontal"><materialDesign:PackIcon Kind="CashRegister" Width="16" Height="16" VerticalAlignment="Center"/><TextBlock Text="صندوق فروش" Margin="8,0,0,0" VerticalAlignment="Center"/></StackPanel>
-                                </Button>
-                            </StackPanel>
-                        </Expander>
-
-                        <Expander Header="خرید" Style="{StaticResource NavExpander}">
-                            <StackPanel>
-                                <Button Style="{StaticResource NavItem}" Command="{Binding NavigateCommand}" CommandParameter="PurchaseInvoice">
-                                    <StackPanel Orientation="Horizontal"><materialDesign:PackIcon Kind="CartArrowDown" Width="16" Height="16" VerticalAlignment="Center"/><TextBlock Text="فاکتور خرید" Margin="8,0,0,0" VerticalAlignment="Center"/></StackPanel>
-                                </Button>
-                            </StackPanel>
-                        </Expander>
-
-                        <Expander Header="انبار" Style="{StaticResource NavExpander}">
-                            <StackPanel>
-                                <Button Style="{StaticResource NavItem}" Command="{Binding NavigateCommand}" CommandParameter="Products">
-                                    <StackPanel Orientation="Horizontal"><materialDesign:PackIcon Kind="PackageVariantClosed" Width="16" Height="16" VerticalAlignment="Center"/><TextBlock Text="کالاها" Margin="8,0,0,0" VerticalAlignment="Center"/></StackPanel>
-                                </Button>
-                                <Button Style="{StaticResource NavItem}" Command="{Binding NavigateCommand}" CommandParameter="Warehouses">
-                                    <StackPanel Orientation="Horizontal"><materialDesign:PackIcon Kind="Warehouse" Width="16" Height="16" VerticalAlignment="Center"/><TextBlock Text="انبارها" Margin="8,0,0,0" VerticalAlignment="Center"/></StackPanel>
-                                </Button>
-                                <Button Style="{StaticResource NavItem}" Command="{Binding NavigateCommand}" CommandParameter="StockAdjust">
-                                    <StackPanel Orientation="Horizontal"><materialDesign:PackIcon Kind="SwapHorizontal" Width="16" Height="16" VerticalAlignment="Center"/><TextBlock Text="تعدیل موجودی" Margin="8,0,0,0" VerticalAlignment="Center"/></StackPanel>
-                                </Button>
-                            </StackPanel>
-                        </Expander>
-
-                        <Expander Header="مشتریان" Style="{StaticResource NavExpander}">
-                            <StackPanel>
-                                <Button Style="{StaticResource NavItem}" Command="{Binding NavigateCommand}" CommandParameter="Customers">
-                                    <StackPanel Orientation="Horizontal"><materialDesign:PackIcon Kind="AccountGroupOutline" Width="16" Height="16" VerticalAlignment="Center"/><TextBlock Text="مشتریان" Margin="8,0,0,0" VerticalAlignment="Center"/></StackPanel>
-                                </Button>
-                                <Button Style="{StaticResource NavItem}" Command="{Binding NavigateCommand}" CommandParameter="Suppliers">
-                                    <StackPanel Orientation="Horizontal"><materialDesign:PackIcon Kind="TruckOutline" Width="16" Height="16" VerticalAlignment="Center"/><TextBlock Text="تأمین‌کنندگان" Margin="8,0,0,0" VerticalAlignment="Center"/></StackPanel>
-                                </Button>
-                            </StackPanel>
-                        </Expander>
-
-                        <Expander Header="منابع انسانی" Style="{StaticResource NavExpander}">
-                            <StackPanel>
-                                <Button Style="{StaticResource NavItem}" Command="{Binding NavigateCommand}" CommandParameter="Employees">
-                                    <StackPanel Orientation="Horizontal"><materialDesign:PackIcon Kind="AccountTieOutline" Width="16" Height="16" VerticalAlignment="Center"/><TextBlock Text="کارکنان" Margin="8,0,0,0" VerticalAlignment="Center"/></StackPanel>
-                                </Button>
-                                <Button Style="{StaticResource NavItem}" Command="{Binding NavigateCommand}" CommandParameter="Salary">
-                                    <StackPanel Orientation="Horizontal"><materialDesign:PackIcon Kind="CashMultiple" Width="16" Height="16" VerticalAlignment="Center"/><TextBlock Text="حقوق و دستمزد" Margin="8,0,0,0" VerticalAlignment="Center"/></StackPanel>
-                                </Button>
-                                <Button Style="{StaticResource NavItem}" Command="{Binding NavigateCommand}" CommandParameter="Attendance">
-                                    <StackPanel Orientation="Horizontal"><materialDesign:PackIcon Kind="CalendarCheckOutline" Width="16" Height="16" VerticalAlignment="Center"/><TextBlock Text="حضور و غیاب" Margin="8,0,0,0" VerticalAlignment="Center"/></StackPanel>
-                                </Button>
-                            </StackPanel>
-                        </Expander>
-
-                        <Expander Header="سیستم" Style="{StaticResource NavExpander}">
-                            <StackPanel>
-                                <Button Style="{StaticResource NavItem}" Command="{Binding NavigateCommand}" CommandParameter="Settings">
-                                    <StackPanel Orientation="Horizontal"><materialDesign:PackIcon Kind="CogOutline" Width="16" Height="16" VerticalAlignment="Center"/><TextBlock Text="تنظیمات" Margin="8,0,0,0" VerticalAlignment="Center"/></StackPanel>
-                                </Button>
-                                <Button Style="{StaticResource NavItem}" Command="{Binding NavigateCommand}" CommandParameter="Backup">
-                                    <StackPanel Orientation="Horizontal"><materialDesign:PackIcon Kind="DatabaseExportOutline" Width="16" Height="16" VerticalAlignment="Center"/><TextBlock Text="پشتیبان‌گیری" Margin="8,0,0,0" VerticalAlignment="Center"/></StackPanel>
-                                </Button>
-                            </StackPanel>
-                        </Expander>
-                    </StackPanel>
-                </ScrollViewer>
-            </Border>
-        </Grid>
-
+        <!-- ═══ Workspace: Telerik RadDocking (full width MDI) ═══ -->
+        <telerik:RadDocking Grid.Row="2" x:Name="docking" Margin="2"
+                            Close="Docking_Close" BorderThickness="0" HasDocumentHost="True">
+            <telerik:RadDocking.DocumentHost>
+                <telerik:RadSplitContainer>
+                    <telerik:RadPaneGroup x:Name="docGroup"/>
+                </telerik:RadSplitContainer>
+            </telerik:RadDocking.DocumentHost>
+        </telerik:RadDocking>
         <!-- ═══ Status bar ═══ -->
         <Border Grid.Row="3" Background="{DynamicResource SidebarBackground}" Height="28">
             <DockPanel LastChildFill="False" Margin="14,0">
