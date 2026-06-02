@@ -48,7 +48,7 @@ public partial class CustomerListViewModel : BaseViewModel
     }
 
     [RelayCommand] private async Task SearchAsync() => await LoadAsync();
-    [RelayCommand] private void NewCustomer() => _navigationService.NavigateTo("NewCustomer");
+    [RelayCommand] private void NewCustomer() => _navigationService.NavigateTo("CustomerEdit");
     [RelayCommand] private void EditCustomer() { }
     [RelayCommand] private async Task SendSmsAsync() => await _dialogService.ShowInfoAsync("ارسال پیامک...");
     [RelayCommand] private async Task ExportAsync() => await _dialogService.ShowInfoAsync("خروجی اکسل...");

@@ -50,6 +50,7 @@
     <!-- CRM -->
     <DataTemplate DataType="{x:Type crm:CustomerEditViewModel}"><vcrm:CustomerEditView/></DataTemplate>
     <DataTemplate DataType="{x:Type crm:CustomerListViewModel}"><vcrm:CustomerListView/></DataTemplate>
+    <DataTemplate DataType="{x:Type crm:SupplierListViewModel}"><vcrm:SupplierListView/></DataTemplate>
 
     <!-- HRM -->
     <DataTemplate DataType="{x:Type hrm:SalaryViewModel}"><vhrm:SalaryView/></DataTemplate>
@@ -82,9 +83,6 @@
         <ContentControl ContentTemplate="{StaticResource UnderConstruction}" Content="{Binding}"/>
     </DataTemplate>
     <DataTemplate DataType="{x:Type inv:StockAdjustViewModel}">
-        <ContentControl ContentTemplate="{StaticResource UnderConstruction}" Content="{Binding}"/>
-    </DataTemplate>
-    <DataTemplate DataType="{x:Type crm:SupplierListViewModel}">
         <ContentControl ContentTemplate="{StaticResource UnderConstruction}" Content="{Binding}"/>
     </DataTemplate>
     <DataTemplate DataType="{x:Type hrm:AttendanceViewModel}">
