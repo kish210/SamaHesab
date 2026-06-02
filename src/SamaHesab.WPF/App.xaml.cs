@@ -212,7 +212,7 @@ public partial class App : System.Windows.Application
             try
             {
                 vm.NavigateCommand.Execute(key);
-                await Task.Delay(1300);
+                await Task.Delay(2200);
                 w.UpdateLayout();
                 int width = (int)(w.ActualWidth > 0 ? w.ActualWidth : 1600);
                 int height = (int)(w.ActualHeight > 0 ? w.ActualHeight : 900);

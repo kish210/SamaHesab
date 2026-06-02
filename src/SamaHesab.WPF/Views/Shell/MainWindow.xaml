@@ -196,10 +196,104 @@
             </DockPanel>
         </Border>
 
-        <!-- ═══ Command bar (flat ribbon) ═══ -->
-        <Border Grid.Row="1" Background="{DynamicResource RibbonBackground}"
-                BorderBrush="{DynamicResource BorderColor}" BorderThickness="0,0,0,1">
-            <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled">
+        <!-- ═══ Office-style Ribbon (Telerik RadRibbonView) ═══ -->
+        <telerik:RadRibbonView Grid.Row="1" x:Name="ribbon" ApplicationName="سما حساب"
+                               Title="" SelectedIndex="0" BorderThickness="0"
+                               FlowDirection="RightToLeft">
+            <telerik:RadRibbonTab Header="خانه">
+                <telerik:RadRibbonGroup Header="عمومی">
+                    <telerik:RadRibbonButton Text="داشبورد" Size="Large"
+                        Command="{Binding NavigateCommand}" CommandParameter="Dashboard"/>
+                    <telerik:RadRibbonButton Text="گزارش‌ها" Size="Large"
+                        Command="{Binding NavigateCommand}" CommandParameter="Reports"/>
+                    <telerik:RadRibbonButton Text="خروج" Size="Large"
+                        Command="{Binding LogoutCommand}"/>
+                </telerik:RadRibbonGroup>
+            </telerik:RadRibbonTab>
+
+            <telerik:RadRibbonTab Header="حسابداری">
+                <telerik:RadRibbonGroup Header="اسناد">
+                    <telerik:RadRibbonButton Text="ثبت سند" Size="Large"
+                        Command="{Binding NavigateCommand}" CommandParameter="VoucherEdit"/>
+                    <telerik:RadRibbonButton Text="اسناد حسابداری" Size="Large"
+                        Command="{Binding NavigateCommand}" CommandParameter="Vouchers"/>
+                </telerik:RadRibbonGroup>
+                <telerik:RadRibbonGroup Header="کدینگ و گزارش">
+                    <telerik:RadRibbonButton Text="نمودار حساب‌ها" Size="Large"
+                        Command="{Binding NavigateCommand}" CommandParameter="ChartOfAccounts"/>
+                    <telerik:RadRibbonButton Text="گزارش‌ها" Size="Large"
+                        Command="{Binding NavigateCommand}" CommandParameter="Reports"/>
+                </telerik:RadRibbonGroup>
+            </telerik:RadRibbonTab>
+
+            <telerik:RadRibbonTab Header="خزانه‌داری">
+                <telerik:RadRibbonGroup Header="دریافت و پرداخت">
+                    <telerik:RadRibbonButton Text="مدیریت چک" Size="Large"
+                        Command="{Binding NavigateCommand}" CommandParameter="Cheques"/>
+                    <telerik:RadRibbonButton Text="حساب‌های بانکی" Size="Large"
+                        Command="{Binding NavigateCommand}" CommandParameter="BankAccounts"/>
+                </telerik:RadRibbonGroup>
+            </telerik:RadRibbonTab>
+
+            <telerik:RadRibbonTab Header="فروش">
+                <telerik:RadRibbonGroup Header="فروش">
+                    <telerik:RadRibbonButton Text="فاکتور فروش" Size="Large"
+                        Command="{Binding NavigateCommand}" CommandParameter="SalesInvoice"/>
+                    <telerik:RadRibbonButton Text="لیست فروش" Size="Large"
+                        Command="{Binding NavigateCommand}" CommandParameter="SalesInvoiceList"/>
+                    <telerik:RadRibbonButton Text="صندوق فروش" Size="Large"
+                        Command="{Binding NavigateCommand}" CommandParameter="POS"/>
+                </telerik:RadRibbonGroup>
+            </telerik:RadRibbonTab>
+
+            <telerik:RadRibbonTab Header="خرید">
+                <telerik:RadRibbonGroup Header="خرید">
+                    <telerik:RadRibbonButton Text="فاکتور خرید" Size="Large"
+                        Command="{Binding NavigateCommand}" CommandParameter="PurchaseInvoice"/>
+                </telerik:RadRibbonGroup>
+            </telerik:RadRibbonTab>
+
+            <telerik:RadRibbonTab Header="انبار">
+                <telerik:RadRibbonGroup Header="کالا و موجودی">
+                    <telerik:RadRibbonButton Text="کالاها" Size="Large"
+                        Command="{Binding NavigateCommand}" CommandParameter="Products"/>
+                    <telerik:RadRibbonButton Text="انبارها" Size="Large"
+                        Command="{Binding NavigateCommand}" CommandParameter="Warehouses"/>
+                    <telerik:RadRibbonButton Text="تعدیل موجودی" Size="Large"
+                        Command="{Binding NavigateCommand}" CommandParameter="StockAdjust"/>
+                </telerik:RadRibbonGroup>
+            </telerik:RadRibbonTab>
+
+            <telerik:RadRibbonTab Header="اشخاص">
+                <telerik:RadRibbonGroup Header="طرف‌حساب‌ها">
+                    <telerik:RadRibbonButton Text="مشتریان" Size="Large"
+                        Command="{Binding NavigateCommand}" CommandParameter="Customers"/>
+                    <telerik:RadRibbonButton Text="تأمین‌کنندگان" Size="Large"
+                        Command="{Binding NavigateCommand}" CommandParameter="Suppliers"/>
+                </telerik:RadRibbonGroup>
+            </telerik:RadRibbonTab>
+
+            <telerik:RadRibbonTab Header="مدیریت سیستم">
+                <telerik:RadRibbonGroup Header="منابع انسانی">
+                    <telerik:RadRibbonButton Text="کارکنان" Size="Large"
+                        Command="{Binding NavigateCommand}" CommandParameter="Employees"/>
+                    <telerik:RadRibbonButton Text="حقوق و دستمزد" Size="Large"
+                        Command="{Binding NavigateCommand}" CommandParameter="Salary"/>
+                    <telerik:RadRibbonButton Text="حضور و غیاب" Size="Large"
+                        Command="{Binding NavigateCommand}" CommandParameter="Attendance"/>
+                </telerik:RadRibbonGroup>
+                <telerik:RadRibbonGroup Header="سیستم">
+                    <telerik:RadRibbonButton Text="تنظیمات" Size="Large"
+                        Command="{Binding NavigateCommand}" CommandParameter="Settings"/>
+                    <telerik:RadRibbonButton Text="پشتیبان‌گیری" Size="Large"
+                        Command="{Binding NavigateCommand}" CommandParameter="Backup"/>
+                </telerik:RadRibbonGroup>
+            </telerik:RadRibbonTab>
+        </telerik:RadRibbonView>
+
+        <!-- (old flat command bar removed) -->
+        <Border Grid.Row="1" Visibility="Collapsed">
+            <ScrollViewer>
                 <StackPanel Orientation="Horizontal" Margin="8,6">
                     <!-- فایل -->
                     <Button Style="{StaticResource RibbonButton}" Command="{Binding NavigateCommand}" CommandParameter="Dashboard">
