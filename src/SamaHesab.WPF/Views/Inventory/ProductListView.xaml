@@ -83,7 +83,7 @@
             <telerik:RadGridView x:Name="grid"
                                  ItemsSource="{Binding Products}"
                                  SelectedItem="{Binding SelectedProduct}"
-                                 AutoGenerateColumns="False"
+                                 AutoGenerateColumns="False" ShowSearchPanel="True"
                                  IsReadOnly="True"
                                  CanUserFreezeColumns="True"
                                  ShowGroupPanel="True"

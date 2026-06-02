@@ -112,7 +112,7 @@
         <telerik:RadGridView Grid.Row="3"
                   ItemsSource="{Binding Vouchers}"
                   SelectedItem="{Binding SelectedVoucher}"
-                  AutoGenerateColumns="False" CanUserInsertRows="False" CanUserDeleteRows="False"
+                  AutoGenerateColumns="False" ShowSearchPanel="True" CanUserInsertRows="False" CanUserDeleteRows="False"
                   RowIndicatorVisibility="Collapsed" ShowGroupPanel="True"
                   FontFamily="{StaticResource VazirFont}">
             <telerik:RadGridView.Columns>

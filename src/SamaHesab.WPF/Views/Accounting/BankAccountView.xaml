@@ -30,7 +30,7 @@
         </Border>
 
         <Border Grid.Row="1" Style="{StaticResource FormSectionCard}" Padding="0">
-            <telerik:RadGridView ItemsSource="{Binding Accounts}" AutoGenerateColumns="False"
+            <telerik:RadGridView ItemsSource="{Binding Accounts}" AutoGenerateColumns="False" ShowSearchPanel="True"
                                  IsReadOnly="True" RowIndicatorVisibility="Collapsed" ShowGroupPanel="True"
                                  FontFamily="{StaticResource VazirFont}">
                 <telerik:RadGridView.Columns>
