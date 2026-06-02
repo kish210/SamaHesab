@@ -150,6 +150,18 @@ public partial class App : System.Windows.Application
             }
         });
 
+        // ─── Capture screenshots of every screen (dev only) ───────────────────
+        if (Environment.GetEnvironmentVariable("SAMA_SHOTS") == "1")
+        {
+            ((Services.CurrentUserService)_host.Services.GetRequiredService<ICurrentUserService>())
+                .SetCurrentUser(1, 1, 1, "admin", "مدیر سیستم", new[] { "ADMIN" }, Array.Empty<string>());
+            var w = _host.Services.GetRequiredService<MainWindow>();
+            w.Show();
+            await RunScreenshotsAsync(w);
+            Shutdown();
+            return;
+        }
+
         // ─── Self-test of the real persistence paths (dev only) ────────────────
         if (Environment.GetEnvironmentVariable("SAMA_SELFTEST") == "1")
         {
@@ -170,6 +182,51 @@ public partial class App : System.Windows.Application
 
         var loginWindow = _host.Services.GetRequiredService<LoginWindow>();
         loginWindow.Show();
+    }
+
+    private async Task RunScreenshotsAsync(Window w)
+    {
+        var dir = @"D:\duc\sama-hesab\screenshot";
+        System.IO.Directory.CreateDirectory(dir);
+        var vm = (ViewModels.Shell.MainViewModel)w.DataContext;
+
+        var pages = new (string Key, string File)[]
+        {
+            ("Dashboard","01_داشبورد"), ("Vouchers","02_اسناد_حسابداری"),
+            ("VoucherEdit","03_ثبت_سند"), ("ChartOfAccounts","04_نمودار_حسابها"),
+            ("Cheques","05_چکها"), ("BankAccounts","06_حسابهای_بانکی"),
+            ("Products","07_کالاها"), ("ProductEdit","08_ویرایش_کالا"),
+            ("Warehouses","09_انبارها"), ("StockAdjust","10_تعدیل_موجودی"),
+            ("SalesInvoice","11_فاکتور_فروش"), ("SalesInvoiceList","12_لیست_فروش"),
+            ("PurchaseInvoice","13_فاکتور_خرید"), ("POS","14_صندوق_فروش"),
+            ("Customers","15_مشتریان"), ("CustomerEdit","16_ویرایش_مشتری"),
+            ("Suppliers","17_تامین_کنندگان"), ("Employees","18_کارکنان"),
+            ("Salary","19_حقوق"), ("Attendance","20_حضور_غیاب"),
+            ("Reports","21_گزارشها"), ("Settings","22_تنظیمات"), ("Backup","23_پشتیبانگیری"),
+        };
+
+        await Task.Delay(1500); // let the shell + dashboard render
+
+        foreach (var (key, file) in pages)
+        {
+            try
+            {
+                vm.NavigateCommand.Execute(key);
+                await Task.Delay(1300);
+                w.UpdateLayout();
+                int width = (int)(w.ActualWidth > 0 ? w.ActualWidth : 1600);
+                int height = (int)(w.ActualHeight > 0 ? w.ActualHeight : 900);
+                var rtb = new System.Windows.Media.Imaging.RenderTargetBitmap(
+                    width, height, 96, 96, System.Windows.Media.PixelFormats.Pbgra32);
+                rtb.Render(w);
+                var enc = new System.Windows.Media.Imaging.PngBitmapEncoder();
+                enc.Frames.Add(System.Windows.Media.Imaging.BitmapFrame.Create(rtb));
+                using var fs = System.IO.File.Create(System.IO.Path.Combine(dir, file + ".png"));
+                enc.Save(fs);
+                Log.Information("[SHOT] {File}", file);
+            }
+            catch (Exception ex) { Log.Warning(ex, "[SHOT] failed {File}", file); }
+        }
     }
 
     private async Task RunSelfTestAsync()
