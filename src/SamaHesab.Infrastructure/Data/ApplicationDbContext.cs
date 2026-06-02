@@ -4,6 +4,7 @@ using SamaHesab.Domain.Entities.Inventory;
 using SamaHesab.Domain.Entities.Settings;
 using SamaHesab.Domain.Entities.CRM;
 using SamaHesab.Domain.Entities.Sales;
+using SamaHesab.Domain.Entities.HRM;
 
 namespace SamaHesab.Infrastructure.Data;
 
@@ -32,6 +33,9 @@ public class ApplicationDbContext : DbContext
     public DbSet<SalesInvoice> SalesInvoices { get; set; }
     public DbSet<SalesInvoiceItem> SalesInvoiceItems { get; set; }
 
+    // HRM
+    public DbSet<Employee> Employees { get; set; }
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
@@ -57,6 +61,10 @@ public class ApplicationDbContext : DbContext
         modelBuilder.Entity<Supplier>().ToTable("Suppliers", "Crm");
         modelBuilder.Entity<SalesInvoice>().ToTable("SalesInvoices", "Sal");
         modelBuilder.Entity<SalesInvoiceItem>().ToTable("SalesInvoiceItems", "Sal");
+        modelBuilder.Entity<Employee>().ToTable("Employees", "Hrm");
+        // Avoid cascading the HR detail tables into the model for now.
+        modelBuilder.Entity<Employee>().Ignore(e => e.AttendanceRecords);
+        modelBuilder.Entity<Employee>().Ignore(e => e.SalarySlips);
 
         // Cheque enums are stored as Persian NVARCHAR in the DB.
         modelBuilder.Entity<Cheque>().Property(c => c.Status)
