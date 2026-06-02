@@ -3,6 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              xmlns:conv="clr-namespace:SamaHesab.WPF.Converters"
+             xmlns:telerik="http://schemas.telerik.com/2008/xaml/presentation"
              Background="{DynamicResource AppBackground}"
              FontFamily="{StaticResource VazirFont}"
              FlowDirection="RightToLeft">
@@ -167,30 +168,31 @@
             </Grid.ColumnDefinitions>
 
             <Border Grid.Column="0" Style="{StaticResource FormSectionCard}" Margin="0,0,4,0" Padding="0">
-                <DataGrid ItemsSource="{Binding InvoiceItems}" SelectedItem="{Binding SelectedItem}"
-                          AutoGenerateColumns="False" HeadersVisibility="Column" CanUserAddRows="False">
-                    <DataGrid.Columns>
-                        <DataGridTextColumn Header="ردیف" Binding="{Binding RowNumber}" Width="50" IsReadOnly="True"/>
-                        <DataGridTextColumn Header="کد" Binding="{Binding ProductCode}" Width="80" IsReadOnly="True"/>
-                        <DataGridTextColumn Header="نام کالا" Binding="{Binding ProductName}" Width="*" IsReadOnly="True"/>
-                        <DataGridTextColumn Header="مقدار" Binding="{Binding Quantity}" Width="80"/>
-                        <DataGridTextColumn Header="قیمت واحد" Binding="{Binding UnitPrice, StringFormat={}{0:#,##0}}" Width="110"/>
-                        <DataGridTextColumn Header="تخفیف ٪" Binding="{Binding DiscountPct}" Width="70"/>
-                        <DataGridTextColumn Header="مالیات ٪" Binding="{Binding TaxPct}" Width="70"/>
-                        <DataGridTextColumn Header="مبلغ خالص" Binding="{Binding NetAmount, StringFormat={}{0:#,##0}}" Width="120" IsReadOnly="True"/>
-                        <DataGridTemplateColumn Header="حذف" Width="50">
-                            <DataGridTemplateColumn.CellTemplate>
+                <telerik:RadGridView ItemsSource="{Binding InvoiceItems}" SelectedItem="{Binding SelectedItem}"
+                          AutoGenerateColumns="False" CanUserInsertRows="False" CanUserDeleteRows="False"
+                          RowIndicatorVisibility="Collapsed" ShowGroupPanel="False" FontFamily="{StaticResource VazirFont}">
+                    <telerik:RadGridView.Columns>
+                        <telerik:GridViewDataColumn Header="ردیف" DataMemberBinding="{Binding RowNumber}" Width="50" IsReadOnly="True"/>
+                        <telerik:GridViewDataColumn Header="کد" DataMemberBinding="{Binding ProductCode}" Width="80" IsReadOnly="True"/>
+                        <telerik:GridViewDataColumn Header="نام کالا" DataMemberBinding="{Binding ProductName}" Width="*" IsReadOnly="True"/>
+                        <telerik:GridViewDataColumn Header="مقدار" DataMemberBinding="{Binding Quantity}" Width="80"/>
+                        <telerik:GridViewDataColumn Header="قیمت واحد" DataMemberBinding="{Binding UnitPrice}" DataFormatString="{}{0:#,##0}" Width="110"/>
+                        <telerik:GridViewDataColumn Header="تخفیف ٪" DataMemberBinding="{Binding DiscountPct}" Width="70"/>
+                        <telerik:GridViewDataColumn Header="مالیات ٪" DataMemberBinding="{Binding TaxPct}" Width="70"/>
+                        <telerik:GridViewDataColumn Header="مبلغ خالص" DataMemberBinding="{Binding NetAmount}" DataFormatString="{}{0:#,##0}" Width="120" IsReadOnly="True"/>
+                        <telerik:GridViewDataColumn Header="حذف" Width="50" IsReadOnly="True">
+                            <telerik:GridViewDataColumn.CellTemplate>
                                 <DataTemplate>
                                     <Button Style="{StaticResource ToolbarButton}" Width="34" Height="30"
-                                            Command="{Binding DataContext.RemoveItemCommand, RelativeSource={RelativeSource AncestorType=DataGrid}}"
+                                            Command="{Binding DataContext.RemoveItemCommand, RelativeSource={RelativeSource AncestorType=telerik:RadGridView}}"
                                             CommandParameter="{Binding}">
                                         <materialDesign:PackIcon Kind="DeleteOutline" Width="18" Height="18" Foreground="{DynamicResource DangerColor}"/>
                                     </Button>
                                 </DataTemplate>
-                            </DataGridTemplateColumn.CellTemplate>
-                        </DataGridTemplateColumn>
-                    </DataGrid.Columns>
-                </DataGrid>
+                            </telerik:GridViewDataColumn.CellTemplate>
+                        </telerik:GridViewDataColumn>
+                    </telerik:RadGridView.Columns>
+                </telerik:RadGridView>
             </Border>
 
             <!-- Search results -->
