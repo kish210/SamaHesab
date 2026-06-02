@@ -42,7 +42,7 @@ public partial class MainViewModel : BaseViewModel
     [ObservableProperty] private string _statusMessage = "آماده";
     [ObservableProperty] private bool _isDarkTheme = true;
 
-    private readonly Dictionary<string, (string Title, Func<BaseViewModel> Factory)> _pages;
+    private readonly Dictionary<string, (string Title, Func<IServiceProvider, BaseViewModel> Factory)> _pages;
 
     public MainViewModel(
         IServiceProvider services,
@@ -56,32 +56,32 @@ public partial class MainViewModel : BaseViewModel
         _calendar = calendar;
         _currentUser = currentUser;
 
-        _pages = new Dictionary<string, (string, Func<BaseViewModel>)>
+        _pages = new Dictionary<string, (string, Func<IServiceProvider, BaseViewModel>)>
         {
-            ["Dashboard"]       = ("داشبورد",            () => _services.GetRequiredService<DashboardViewModel>()),
-            ["Vouchers"]        = ("اسناد حسابداری",      () => _services.GetRequiredService<VoucherListViewModel>()),
-            ["VoucherEdit"]     = ("ثبت سند",             () => _services.GetRequiredService<VoucherEditViewModel>()),
-            ["ChartOfAccounts"] = ("نمودار حساب‌ها",      () => _services.GetRequiredService<ChartOfAccountsViewModel>()),
-            ["Cheques"]         = ("مدیریت چک",           () => _services.GetRequiredService<ChequeListViewModel>()),
-            ["BankAccounts"]    = ("حساب‌های بانکی",      () => _services.GetRequiredService<BankAccountViewModel>()),
-            ["Products"]        = ("مدیریت کالا",         () => _services.GetRequiredService<ProductListViewModel>()),
-            ["ProductEdit"]     = ("ویرایش کالا",         () => _services.GetRequiredService<ProductEditViewModel>()),
-            ["Warehouses"]      = ("انبارها",              () => _services.GetRequiredService<WarehouseViewModel>()),
-            ["StockAdjust"]     = ("تعدیل موجودی",        () => _services.GetRequiredService<StockAdjustViewModel>()),
-            ["SalesInvoice"]    = ("فاکتور فروش",         () => _services.GetRequiredService<SalesInvoiceEditViewModel>()),
-            ["SalesInvoiceList"]= ("لیست فروش",           () => _services.GetRequiredService<SalesInvoiceListViewModel>()),
-            ["PurchaseInvoice"] = ("فاکتور خرید",         () => _services.GetRequiredService<PurchaseInvoiceEditViewModel>()),
-            ["POS"]             = ("صندوق فروش",          () => _services.GetRequiredService<PosViewModel>()),
-            ["Customers"]       = ("مشتریان",             () => _services.GetRequiredService<CustomerListViewModel>()),
-            ["CustomerEdit"]    = ("ویرایش مشتری",        () => _services.GetRequiredService<CustomerEditViewModel>()),
-            ["Suppliers"]       = ("تأمین‌کنندگان",       () => _services.GetRequiredService<SupplierListViewModel>()),
-            ["Employees"]       = ("کارکنان",             () => _services.GetRequiredService<EmployeeListViewModel>()),
-            ["EmployeeEdit"]    = ("پرونده کارمند",       () => _services.GetRequiredService<EmployeeEditViewModel>()),
-            ["Salary"]          = ("حقوق و دستمزد",       () => _services.GetRequiredService<SalaryViewModel>()),
-            ["Attendance"]      = ("حضور و غیاب",         () => _services.GetRequiredService<AttendanceViewModel>()),
-            ["Reports"]         = ("گزارش‌ها",            () => _services.GetRequiredService<ReportsViewModel>()),
-            ["Settings"]        = ("تنظیمات",             () => _services.GetRequiredService<SettingsViewModel>()),
-            ["Backup"]          = ("پشتیبان‌گیری",         () => _services.GetRequiredService<BackupViewModel>()),
+            ["Dashboard"]       = ("داشبورد",            sp => sp.GetRequiredService<DashboardViewModel>()),
+            ["Vouchers"]        = ("اسناد حسابداری",      sp => sp.GetRequiredService<VoucherListViewModel>()),
+            ["VoucherEdit"]     = ("ثبت سند",             sp => sp.GetRequiredService<VoucherEditViewModel>()),
+            ["ChartOfAccounts"] = ("نمودار حساب‌ها",      sp => sp.GetRequiredService<ChartOfAccountsViewModel>()),
+            ["Cheques"]         = ("مدیریت چک",           sp => sp.GetRequiredService<ChequeListViewModel>()),
+            ["BankAccounts"]    = ("حساب‌های بانکی",      sp => sp.GetRequiredService<BankAccountViewModel>()),
+            ["Products"]        = ("مدیریت کالا",         sp => sp.GetRequiredService<ProductListViewModel>()),
+            ["ProductEdit"]     = ("ویرایش کالا",         sp => sp.GetRequiredService<ProductEditViewModel>()),
+            ["Warehouses"]      = ("انبارها",              sp => sp.GetRequiredService<WarehouseViewModel>()),
+            ["StockAdjust"]     = ("تعدیل موجودی",        sp => sp.GetRequiredService<StockAdjustViewModel>()),
+            ["SalesInvoice"]    = ("فاکتور فروش",         sp => sp.GetRequiredService<SalesInvoiceEditViewModel>()),
+            ["SalesInvoiceList"]= ("لیست فروش",           sp => sp.GetRequiredService<SalesInvoiceListViewModel>()),
+            ["PurchaseInvoice"] = ("فاکتور خرید",         sp => sp.GetRequiredService<PurchaseInvoiceEditViewModel>()),
+            ["POS"]             = ("صندوق فروش",          sp => sp.GetRequiredService<PosViewModel>()),
+            ["Customers"]       = ("مشتریان",             sp => sp.GetRequiredService<CustomerListViewModel>()),
+            ["CustomerEdit"]    = ("ویرایش مشتری",        sp => sp.GetRequiredService<CustomerEditViewModel>()),
+            ["Suppliers"]       = ("تأمین‌کنندگان",       sp => sp.GetRequiredService<SupplierListViewModel>()),
+            ["Employees"]       = ("کارکنان",             sp => sp.GetRequiredService<EmployeeListViewModel>()),
+            ["EmployeeEdit"]    = ("پرونده کارمند",       sp => sp.GetRequiredService<EmployeeEditViewModel>()),
+            ["Salary"]          = ("حقوق و دستمزد",       sp => sp.GetRequiredService<SalaryViewModel>()),
+            ["Attendance"]      = ("حضور و غیاب",         sp => sp.GetRequiredService<AttendanceViewModel>()),
+            ["Reports"]         = ("گزارش‌ها",            sp => sp.GetRequiredService<ReportsViewModel>()),
+            ["Settings"]        = ("تنظیمات",             sp => sp.GetRequiredService<SettingsViewModel>()),
+            ["Backup"]          = ("پشتیبان‌گیری",         sp => sp.GetRequiredService<BackupViewModel>()),
         };
 
         // Clock timer
@@ -126,8 +126,11 @@ public partial class MainViewModel : BaseViewModel
         await _navLock.WaitAsync();
         try
         {
-            var vm = entry.Factory();
-            var tab = new WorkspaceTab(page, entry.Title, vm, canClose: page != "Dashboard");
+            // Each open screen gets its own DI scope → its own DbContext, so
+            // multiple screens open at once never collide on a shared context.
+            var scope = _services.CreateScope();
+            var vm = entry.Factory(scope.ServiceProvider);
+            var tab = new WorkspaceTab(page, entry.Title, vm, canClose: page != "Dashboard", scope);
             OpenTabs.Add(tab);
             SelectedTab = tab;
             CurrentPage = vm;
@@ -159,6 +162,7 @@ public partial class MainViewModel : BaseViewModel
         OpenTabs.Remove(tab);
         if (SelectedTab == tab)
             SelectedTab = OpenTabs.Count > 0 ? OpenTabs[System.Math.Min(idx, OpenTabs.Count - 1)] : null;
+        tab.Dispose();
     }
 
     [RelayCommand]
@@ -216,18 +220,22 @@ public partial class MainViewModel : BaseViewModel
     }
 }
 
-public partial class WorkspaceTab : CommunityToolkit.Mvvm.ComponentModel.ObservableObject
+public partial class WorkspaceTab : CommunityToolkit.Mvvm.ComponentModel.ObservableObject, IDisposable
 {
     public string Key { get; }
     public string Title { get; }
     public bool CanClose { get; }
     public BaseViewModel Content { get; }
+    private readonly IServiceScope? _scope;
 
-    public WorkspaceTab(string key, string title, BaseViewModel content, bool canClose)
+    public WorkspaceTab(string key, string title, BaseViewModel content, bool canClose, IServiceScope? scope = null)
     {
         Key = key;
         Title = title;
         Content = content;
         CanClose = canClose;
+        _scope = scope;
     }
+
+    public void Dispose() => _scope?.Dispose();
 }

@@ -18,6 +18,7 @@ namespace SamaHesab.WPF.ViewModels.Inventory
         private readonly ICurrentUserService _user;
 
         [ObservableProperty] private int _selectedWarehouseId;
+        private bool _suppressReload;
 
         public ObservableCollection<StockAdjustRow> Rows { get; } = new();
         public List<WarehouseOption> Warehouses { get; private set; } = new();
@@ -36,8 +37,10 @@ namespace SamaHesab.WPF.ViewModels.Inventory
                 Warehouses = (await _warehouseRepo.GetByCompanyAsync(companyId))
                     .Select(w => new WarehouseOption(w.Id, w.Name)).ToList();
                 OnPropertyChanged(nameof(Warehouses));
+                _suppressReload = true;
                 if (SelectedWarehouseId == 0 && Warehouses.Count > 0)
                     SelectedWarehouseId = Warehouses[0].Id;
+                _suppressReload = false;
                 await LoadRowsAsync();
             }, "در حال بارگذاری موجودی...");
         }
@@ -90,7 +93,7 @@ namespace SamaHesab.WPF.ViewModels.Inventory
             }, "در حال ذخیره...");
         }
 
-        partial void OnSelectedWarehouseIdChanged(int value) => _ = LoadRowsAsync();
+        partial void OnSelectedWarehouseIdChanged(int value) { if (!_suppressReload) _ = LoadRowsAsync(); }
     }
 
     public partial class StockAdjustRow : ObservableObject
