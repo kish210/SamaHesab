@@ -198,10 +198,20 @@ public partial class App : System.Windows.Application
             var leaf = await accounts.GetLeafAccountsAsync(1);
             Line($"Leaf accounts read: {leaf.Count}");
 
-            // ── Sales invoice ──
+            // ── Sales invoice ── (use the warehouse that actually holds stock)
             try
             {
-                var p = prodList.First(); var c = custList.First(); var w = whList.First();
+                var stockRepo = sp.GetRequiredService<SamaHesab.Domain.Interfaces.Repositories.IStockItemRepository>();
+                var w = whList.First(); SamaHesab.Domain.Entities.Inventory.StockItem? withStock = null;
+                foreach (var cand in whList)
+                {
+                    var st = await stockRepo.GetByWarehouseAsync(cand.Id);
+                    var hit = st.FirstOrDefault(s => s.Quantity > 0);
+                    if (hit != null) { w = cand; withStock = hit; break; }
+                }
+                var p = withStock != null ? prodList.First(x => x.Id == withStock.ProductId) : prodList.First();
+                var c = custList.First();
+                Line($"  (using warehouse '{w.Name}', product '{p.Name}', stock {withStock?.Quantity ?? 0})");
                 var cmd = new SamaHesab.Application.Sales.Commands.CreateSalesInvoiceCommand(
                     1, 1, "1403/06/15", c.Id, w.Id, SamaHesab.Domain.Enums.InvoiceType.Sale,
                     "خرده", null, null, "تست خودکار", 0, 0,

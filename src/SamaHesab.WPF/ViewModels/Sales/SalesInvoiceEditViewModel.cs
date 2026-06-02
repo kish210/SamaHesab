@@ -84,6 +84,16 @@ public partial class SalesInvoiceEditViewModel : BaseViewModel
         if (Warehouses.Any()) SelectedWarehouseId = Warehouses[0].Id;
     }
 
+    /// <summary>Reload customer list (after a quick-add) and optionally select one.</summary>
+    public async Task ReloadCustomersAsync(int? selectId)
+    {
+        var companyId = _currentUser.CompanyId ?? 1;
+        var customers = await _customerRepository.FindAsync(c => c.CompanyId == companyId && c.IsActive);
+        Customers = customers.Select(c => new CustomerItem(c.Id, c.FullName, c.Mobile ?? "")).ToList();
+        OnPropertyChanged(nameof(Customers));
+        if (selectId.HasValue) SelectedCustomerId = selectId.Value;
+    }
+
     [RelayCommand]
     private async Task SearchProductAsync()
     {

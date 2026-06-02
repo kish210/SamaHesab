@@ -65,10 +65,19 @@
                 </Grid.RowDefinitions>
 
                 <StackPanel Grid.Row="0" Grid.Column="0" Margin="6">
-                    <TextBlock Text="مشتری" Style="{StaticResource FieldCaption}"/>
-                    <ComboBox Style="{StaticResource BaseComboBox}" ItemsSource="{Binding Customers}"
-                              DisplayMemberPath="Name" SelectedValuePath="Id"
-                              SelectedValue="{Binding SelectedCustomerId}"/>
+                    <TextBlock Text="مشتری (جستجو)" Style="{StaticResource FieldCaption}"/>
+                    <DockPanel>
+                        <Button DockPanel.Dock="Left" Width="34" Height="36" Margin="6,0,0,0"
+                                Style="{StaticResource PrimaryButton}" Padding="0"
+                                ToolTip="افزودن مشتری جدید" Click="AddCustomer_Click">
+                            <materialDesign:PackIcon Kind="AccountPlus" Width="18" Height="18"/>
+                        </Button>
+                        <ComboBox Style="{StaticResource BaseComboBox}" ItemsSource="{Binding Customers}"
+                                  DisplayMemberPath="Name" SelectedValuePath="Id"
+                                  SelectedValue="{Binding SelectedCustomerId}"
+                                  IsEditable="True" IsTextSearchEnabled="True"
+                                  StaysOpenOnEdit="True"/>
+                    </DockPanel>
                 </StackPanel>
                 <StackPanel Grid.Row="0" Grid.Column="1" Margin="6">
                     <TextBlock Text="انبار" Style="{StaticResource FieldCaption}"/>
