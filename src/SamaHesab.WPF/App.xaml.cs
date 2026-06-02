@@ -57,6 +57,9 @@ public partial class App : System.Windows.Application
         // Ensure %AppData%\SamaHesab + a default connection string exist (writable).
         Services.AppSettingsStore.EnsureInitialized();
 
+        // Apply the saved Telerik theme (runtime-switchable).
+        Services.ThemeManager.Apply(Services.AppSettingsStore.GetTheme());
+
         // ─── Serilog (writable log folder) ────────────────────────────────────
         Log.Logger = new LoggerConfiguration()
             .MinimumLevel.Information()

@@ -17,16 +17,8 @@
                 <!-- ─── Material Design ↔ MahApps integration ───────────────── -->
                 <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.MahApps;component/Themes/MaterialDesignTheme.MahApps.Defaults.xaml"/>
 
-                <!-- ─── Telerik UI for WPF — Office2019 theme (professional ERP look).
-                     System.Windows.xaml intentionally omitted so it does not restyle
-                     the standard workspace TabControl & tree Expanders. ─ -->
-                <ResourceDictionary Source="pack://application:,,,/Telerik.Windows.Themes.Office2019;component/Themes/Telerik.Windows.Controls.xaml"/>
-                <ResourceDictionary Source="pack://application:,,,/Telerik.Windows.Themes.Office2019;component/Themes/Telerik.Windows.Controls.Input.xaml"/>
-                <ResourceDictionary Source="pack://application:,,,/Telerik.Windows.Themes.Office2019;component/Themes/Telerik.Windows.Controls.Navigation.xaml"/>
-                <ResourceDictionary Source="pack://application:,,,/Telerik.Windows.Themes.Office2019;component/Themes/Telerik.Windows.Controls.RibbonView.xaml"/>
-                <ResourceDictionary Source="pack://application:,,,/Telerik.Windows.Themes.Office2019;component/Themes/Telerik.Windows.Controls.Docking.xaml"/>
-                <ResourceDictionary Source="pack://application:,,,/Telerik.Windows.Themes.Office2019;component/Themes/Telerik.Windows.Controls.GridView.xaml"/>
-                <ResourceDictionary Source="pack://application:,,,/Telerik.Windows.Themes.Office2019;component/Themes/Telerik.Windows.Controls.Data.xaml"/>
+                <!-- Telerik theme dictionaries are merged at runtime by ThemeManager
+                     (so the theme can be switched live). -->
 
                 <!-- ─── Sama Hesab custom theme (LAST → wins for existing views) ─ -->
                 <ResourceDictionary Source="Assets/Themes/Base.xaml"/>

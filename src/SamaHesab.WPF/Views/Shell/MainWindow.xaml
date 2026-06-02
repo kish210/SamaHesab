@@ -209,6 +209,16 @@
                     <telerik:RadRibbonButton Text="خروج" Size="Large"
                         Command="{Binding LogoutCommand}"/>
                 </telerik:RadRibbonGroup>
+                <telerik:RadRibbonGroup Header="پوسته (تم)">
+                    <telerik:RadRibbonButton Text="Office 2019" Size="Medium"
+                        Command="{Binding ChangeThemeCommand}" CommandParameter="Office2019"/>
+                    <telerik:RadRibbonButton Text="Fluent" Size="Medium"
+                        Command="{Binding ChangeThemeCommand}" CommandParameter="Fluent"/>
+                    <telerik:RadRibbonButton Text="Crystal" Size="Medium"
+                        Command="{Binding ChangeThemeCommand}" CommandParameter="Crystal"/>
+                    <telerik:RadRibbonButton Text="Windows 11" Size="Medium"
+                        Command="{Binding ChangeThemeCommand}" CommandParameter="Windows11"/>
+                </telerik:RadRibbonGroup>
             </telerik:RadRibbonTab>
 
             <telerik:RadRibbonTab Header="حسابداری">

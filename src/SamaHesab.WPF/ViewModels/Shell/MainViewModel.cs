@@ -206,6 +206,14 @@ public partial class MainViewModel : BaseViewModel
         catch { await _dialogService.ShowInfoAsync("ماشین‌حساب در دسترس نیست."); }
     }
     [RelayCommand] private async Task ChangeBranchAsync() => await _dialogService.ShowInfoAsync("تغییر شعبه (در نسخه بعدی فعال می‌شود).");
+
+    [RelayCommand]
+    private void ChangeTheme(string theme)
+    {
+        SamaHesab.WPF.Services.ThemeManager.Apply(theme);
+        SamaHesab.WPF.Services.AppSettingsStore.SaveTheme(theme);
+        StatusMessage = $"پوسته به «{theme}» تغییر یافت.";
+    }
 }
 
 public partial class WorkspaceTab : CommunityToolkit.Mvvm.ComponentModel.ObservableObject
